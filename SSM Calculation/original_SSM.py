@@ -28,45 +28,16 @@ Zr = 0.025
 Sp = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
 print("Separation Minimum Distance Calculation: ", Sp)
 
-Scurrent = 4.1
-
-Spmin = Vh*Tr + C + Zd + Zr
-print("Minimum Protection: ", Spmin)
-
-Spspace = Sp - Spmin
-print("Distance Protection: ", Spspace)
-
-
-
-#Scol active pada saat terdapat vr pada rentang kecepatan
-zRob = 0.12
-minHead = 0.15
-maxHead = 0.18
-zHead = [minHead, maxHead]
-minChest = 0.10
-maxChest = 0.14
-zChest = [minChest, maxChest]
-
-Spspace = Sp - Spmin
-Scol = Spmin + Spspace
-print("Distance for collaboration: ", Scol)
+Scurrent = 5
 
 #logical SSM send robot
-if Scurrent < Spmin:
+if Scurrent < Sp:
     print("Robot harus berhenti")
-elif Spmin <= Scurrent and Scol  > Scurrent:
-    print("Robot working on collaboration mode")
-    if zHead[0] < zRob and zHead[1] >= zRob:
-        print("Velocity limitation on head area")
-    elif zChest[0] < zRob and zChest[1] >= zRob:
-        print("Velocity limitation on chest")
-    else:
-        Vr_max_command = Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr)
-        print("Vmax allowable in this workspace: ", Vr_max_command)
-elif Scol <= Scurrent and Sp + 0.5 >= Scurrent:
+elif Sp <= Scurrent and Sp + 0.5 >= Scurrent:
     print("Robot speed reduction")
     # calculate the Vmax allowable
     Vr_max_command = Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr)
     print("Vmax allowable in this workspace: ", Vr_max_command)
+
 else:
     print("Free Speed")
