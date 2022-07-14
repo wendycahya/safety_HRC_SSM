@@ -10,3 +10,5 @@ pip install cvzone
 ```
 
 For the basic example cvzone, you can refers to this link [this](https://github.com/cvzone/cvzone).
+
+Tips: for easier library installation. You can use pyCharm environment.
