@@ -105,7 +105,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 #information
-write_file = "output_eye_humanmidpointdistance.csv"
+write_file = "output_SSM_separation_distance.csv"
 mode_collab = 0
 # ===== camera installation =====
 fpsReader = cvzone.FPS()
@@ -222,14 +222,21 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     print("Robot velocity X Y Z: ", velR[0], velR[1], velR[2])
 
                     # Scol active pada saat terdapat vr pada rentang kecepatan
+
+                    minChest = Ah * Hipmid[1] ** 2 + Bh * Hipmid[1] + Ch
+                    maxChest = Ah * Shomid[1] ** 2 + Bh * Shomid[1] + Ch
+
+                    nosePos = Ah * xyzNose[1] ** 2 + Bh * xyzNose[1] + Ch
+
                     zRob = curRobotPos[2]
-                    minHead = 150
-                    maxHead = 180
+                    minHead = (xyzNose - 200) * 1000
+                    maxHead = (xyzNose + 200) * 1000
                     zHead = [minHead, maxHead]
-                    minChest = 100
-                    maxChest = 140
+                    minChest = minChest * 1000
+                    maxChest = maxChest * 1000
                     zChest = [minChest, maxChest]
 
+                    print("Batas bawah human: ", minChest, maxChest)
 
                     VelRnew = (velR[0]*velR[1]*velR[2]) / 3
                     VelRnew = abs(VelRnew)
@@ -361,6 +368,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
                     elif Spmin <= Scurrent and Scol > Scurrent:
                         print("Robot working on collaboration mode")
+                        print("Batas bawah human: ", minChest, maxChest)
                         mode_collab = 3
                         cv2.putText(img, 'Mode = Collaboration',
                                     (420, 80),
