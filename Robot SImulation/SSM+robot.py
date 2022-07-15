@@ -17,14 +17,14 @@ def Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr):
     Ts = Vr / ac
     T = Tr + Ts
     Ctot = C + Zd + Zr
-    Vrmax = ((Sp - (Vh*T) - Ctot) / T) - (ac*pow(Ts,2)/(2*T))
+    Vrmax = ((Sp - (Vh*T) - Ctot) / T) - (ac*pow(Ts, 2)/(2*T))
     return Vrmax
 
 Vr = 2000
 Vh = 1600
 Tr = 0.41
 ac = 2000
-C  = 100
+C = 100
 Zd = 90
 Zr = 25
 
@@ -36,7 +36,7 @@ vrmax = 2000
 Sp = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
 print("Separation Minimum Distance Calculation: ", Sp)
 
-Scurrent = 4000
+Scurrent = 5000
 print("Current Distance: ", Scurrent)
 
 Spmin = Vh*Tr + C + Zd + Zr
@@ -60,6 +60,7 @@ zChest = [minChest, maxChest]
 Spspace = Sp - Spmin
 Scol = Spmin + Spspace
 print("Distance for collaboration: ", Scol)
+
 
 #logical SSM send robot
 if Scurrent < Spmin:
@@ -94,3 +95,7 @@ else:
     print("Robot bekerja maximal")
     Vr = vrmax
     ur10_robot.setSpeed(Vr, 1)
+
+curRobotPos = ur10_robot.readPosition()
+print("robot position", curRobotPos[0], curRobotPos[1], curRobotPos[2])
+t.sleep(0.5)
