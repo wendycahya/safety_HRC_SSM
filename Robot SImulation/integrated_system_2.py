@@ -165,6 +165,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                 img.flags.writeable = True
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
                 # Extract landmarks
+
                 try:
                     landmarks = results.pose_landmarks.landmark
                     # Get coordinates
@@ -371,10 +372,18 @@ with open(write_file, "wt", encoding="utf-8") as output:
                             print("Velocity limitation on head area: ", vrface)
                             Vr = vrface
                             ur10_robot.setSpeed(Vr, 1)
+                            cv2.putText(img, 'Warning: Face area',
+                                        (420, 100),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                        )
                         elif zChest[0] < zRob and zChest[1] >= zRob:
                             print("Velocity limitation on chest: ", vrchest)
                             Vr = vrchest
                             ur10_robot.setSpeed(Vr, 1)
+                            cv2.putText(img, 'Warning: Chest area',
+                                        (10, 100),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                        )
 
                     elif Scol <= Scurrent and Sp + 500 >= Scurrent:
                         print("Robot speed reduction")
@@ -384,7 +393,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                         Vr = Vr_max_command
                         ur10_robot.setSpeed(Vr, 1)
                         cv2.putText(img, 'Mode = Reduction Area',
-                                    (420, 80),
+                                    (10, 100),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
                                     )
                         cv2.circle(img, (380, 80), radius=10, color=(0, 255, 255), thickness=20)
