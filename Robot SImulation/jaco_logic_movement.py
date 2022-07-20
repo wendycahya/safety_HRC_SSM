@@ -1,6 +1,8 @@
 import time
 from include.coppeliasim import CoppeliaSim, CoppeliaArmRobot
 import threading
+from datetime import datetime
+start = datetime.now()
 
 # Position Data:
 pickPos = [400, -150, 0, 180, 0, 0]
@@ -65,6 +67,60 @@ DPos13 = [550, 40, 200, 180, 0, 0]
 DPos14 = [550, 40, 100, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 
+def moveToGoal():
+    jacoRobot.setPosition2(movePos21, True)
+    jacoRobot.setPosition2(movePos22, True)
+    jacoRobot.setPosition2(movePos23, True)
+    jacoRobot.setPosition2(movePos24, True)
+    jacoRobot.setPosition2(movePos25, True)
+
+def moveToBack():
+    jacoRobot.setPosition2(movePos25, True)
+    jacoRobot.setPosition2(movePos24, True)
+    jacoRobot.setPosition2(movePos23, True)
+    jacoRobot.setPosition2(movePos22, True)
+    jacoRobot.setPosition2(movePos21, True)
+
+def pick_goDown():
+    jacoRobot.setPosition2(objPos3, True)
+    jacoRobot.setPosition2(objPos1, True)
+
+def pick_goUp():
+    jacoRobot.setPosition2(objPos2, True)
+    jacoRobot.setPosition2(objPos3, True)
+
+def place_A():
+    jacoRobot.setPosition2(APos11, True)
+    jacoRobot.setPosition2(APos12, True)
+    jacoRobot.setPosition2(APos13, True)
+    jacoRobot.setPosition2(APos14, True)
+    jacoRobot.setPosition2(APlace, True)
+
+def place_B():
+    jacoRobot.setPosition2(BPos11, True)
+    jacoRobot.setPosition2(BPos12, True)
+    jacoRobot.setPosition2(BPos13, True)
+    jacoRobot.setPosition2(BPos14, True)
+    jacoRobot.setPosition2(BPlace, True)
+
+def place_C():
+    jacoRobot.setPosition2(CPos11, True)
+    jacoRobot.setPosition2(CPos12, True)
+    jacoRobot.setPosition2(CPos13, True)
+    jacoRobot.setPosition2(CPos14, True)
+    jacoRobot.setPosition2(CPlace, True)
+
+def place_D():
+    jacoRobot.setPosition2(DPos11, True)
+    jacoRobot.setPosition2(DPos12, True)
+    jacoRobot.setPosition2(DPos13, True)
+    jacoRobot.setPosition2(DPos14, True)
+    jacoRobot.setPosition2(DPlace, True)
+
+
+progress = [0, 0, 0, 0]
+finish = [1, 1, 1, 1]
+
 # THREAD FUNCTION:
 # Multithread function khusus buat menggerakkan robot
 # Program ini akan terus melalukan looping pick & place
@@ -72,104 +128,89 @@ DPlace = [550, 40, 0, 180, 0, 0]
 def thread_robotMovement():
     jacoRobot.setSpeed(1200, 90)
     while True:
+        print("reading the condition", progress)
+
         jacoRobot.gripperRelease()
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
+        pick_goDown()
         jacoRobot.gripperCatch()
-        jacoRobot.setPosition2(objPos2, True)
-        jacoRobot.setPosition2(objPos3, True)
+        pick_goUp()
+        moveToGoal()
 
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(APos11, True)
-        jacoRobot.setPosition2(APos12, True)
-        jacoRobot.setPosition2(APos13, True)
-        jacoRobot.setPosition2(APos14, True)
-        jacoRobot.setPosition2(APlace, True)
+        # condition A belum terisi
+        if (progress == [0, 0, 0, 0]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 1, 0, 0]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 0, 1, 0]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 0, 0, 1]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 1, 1, 0]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 1, 0, 1]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 0, 1, 1]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        elif (progress == [0, 1, 1, 1]):
+            progress[0] = 1
+            print("robot mengisi progress[0]", progress)
+            place_A()
+        # condition B belum terisi
+        elif (progress == [1, 0, 0, 0]):
+            progress[1] = 1
+            print("robot mengisi progress[1]", progress)
+            place_B()
+        elif (progress == [1, 0, 1, 0]):
+            progress[1] = 1
+            print("robot mengisi progress[1]", progress)
+            place_B()
+        elif (progress == [1, 0, 0, 1]):
+            progress[1] = 1
+            print("robot mengisi progress[1]", progress)
+            place_B()
+        elif (progress == [1, 0, 1, 1]):
+            progress[1] = 1
+            print("robot mengisi progress[1]", progress)
+            place_B()
+        # condition C belum terisi
+        elif (progress == [1, 1, 0, 0]):
+            progress[2] = 1
+            print("robot mengisi progress[2]", progress)
+            place_C()
+        elif (progress == [1, 1, 0, 1]):
+            progress[2] = 1
+            print("robot mengisi progress[2]", progress)
+            place_C()
+        # condition D belum terisi
+        elif (progress == [1, 1, 1, 0]):
+            progress[3] = 1
+            print("robot mengisi progress[3]", progress)
+            place_D()
+        if (progress == finish):
+            print("Robot Stop\n")
+            jacoRobot.gripperRelease()
+            pick_goUp()
+            print(datetime.now() - start)
+            break
 
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
-
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
-        jacoRobot.gripperCatch()
-
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-
-        jacoRobot.setPosition2(BPos11, True)
-        jacoRobot.setPosition2(BPos12, True)
-        jacoRobot.setPosition2(BPos13, True)
-        jacoRobot.setPosition2(BPos14, True)
-        jacoRobot.setPosition2(BPlace, True)
-
-        jacoRobot.gripperRelease()
-        time.sleep(1)
-
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
-
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
-        jacoRobot.gripperCatch()
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(CPos11, True)
-        jacoRobot.setPosition2(CPos12, True)
-        jacoRobot.setPosition2(CPos13, True)
-        jacoRobot.setPosition2(CPos14, True)
-        jacoRobot.setPosition2(CPlace, True)
-
-        jacoRobot.gripperRelease()
-        time.sleep(1)
-
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
-
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
-        jacoRobot.gripperCatch()
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(DPos11, True)
-        jacoRobot.setPosition2(DPos12, True)
-        jacoRobot.setPosition2(DPos13, True)
-        jacoRobot.setPosition2(DPos14, True)
-        jacoRobot.setPosition2(DPlace, True)
-
-        jacoRobot.gripperRelease()
-        time.sleep(1)
+        moveToBack()
 
 # ====================================================
 
@@ -190,7 +231,6 @@ time.sleep(1)
 # start thread:
 t = threading.Thread(target=thread_robotMovement)
 t.start()
-
 
 # MAIN PRORGAM:
 # ======================================================

@@ -16,6 +16,7 @@ x = 0
 
 while True:
     print("reading the condition", progress)
+
 #condition A belum terisi
     if (progress==[0,0,0,0]):
         progress[0] = 1
