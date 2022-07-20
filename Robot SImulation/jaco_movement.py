@@ -21,6 +21,21 @@ liftPos2 = [500, 200, 500, 180, 60, 0]
 liftPos3 = [500, 200, 100, 180, 0, 0]
 
 
+#object pic location
+objPos1 = [500, 260, 0, 180, 0, 0]
+objPos2 = [500, 260, 50, 180, 0, 0]
+objPos3 = [500, 260, 100, 180, 0, 0]
+
+
+#Cube A location
+
+#Cube B location
+
+#Cube C location
+
+#Cube D location
+
+
 # THREAD FUNCTION:
 # Multithread function khusus buat menggerakkan robot
 # Program ini akan terus melalukan looping pick & place
@@ -29,30 +44,34 @@ def thread_robotMovement():
     jacoRobot.setSpeed(1200, 90)
     while True:
         jacoRobot.gripperRelease()
-        jacoRobot.setPosition2(liftPos11, True)
-        jacoRobot.setPosition2(pickPos, True)
-        time.sleep(1)
+        jacoRobot.setPosition2(objPos3, True)
+        jacoRobot.setPosition2(objPos1, True)
         jacoRobot.gripperCatch()
+        jacoRobot.setPosition2(objPos2, True)
+        jacoRobot.setPosition2(objPos3, True)
+        #jacoRobot.setPosition2(pickPos, True)
+        time.sleep(1)
+
 
         # Robot Naik
-        jacoRobot.setPosition2(liftPos11, True)
-        jacoRobot.setPosition2(liftPos12, True)
-        jacoRobot.setPosition2(liftPos13, True)
-        jacoRobot.setPosition2(liftPos14, True)
+        #jacoRobot.setPosition2(liftPos11, True)
+        #jacoRobot.setPosition2(liftPos12, True)
+        #jacoRobot.setPosition2(liftPos13, True)
+        #jacoRobot.setPosition2(liftPos14, True)
 
         # Robot Geser Kiri
-        jacoRobot.setPosition2(liftPos21, True)
-        jacoRobot.setPosition2(liftPos22, True)
-        jacoRobot.setPosition2(liftPos23, True)
-        jacoRobot.setPosition2(liftPos24, True)
-        jacoRobot.setPosition2(liftPos25, True)
+        #jacoRobot.setPosition2(liftPos21, True)
+        #jacoRobot.setPosition2(liftPos22, True)
+        #jacoRobot.setPosition2(liftPos23, True)
+        #jacoRobot.setPosition2(liftPos24, True)
+        #jacoRobot.setPosition2(liftPos25, True)
 
         # Robot Turun
-        jacoRobot.setPosition2(liftPos2, True)
-        jacoRobot.setPosition2(goalPos, True)
-        jacoRobot.gripperRelease()
-        time.sleep(1)
-        jacoRobot.setPosition2(liftPos3, True)
+        #jacoRobot.setPosition2(liftPos2, True)
+        #jacoRobot.setPosition2(goalPos, True)
+        #jacoRobot.gripperRelease()
+        #time.sleep(1)
+        #jacoRobot.setPosition2(liftPos3, True)
 # ====================================================
 
 
