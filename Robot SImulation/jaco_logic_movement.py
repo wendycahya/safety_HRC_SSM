@@ -171,27 +171,6 @@ def thread_robotMovement():
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-
-
-        # Robot Naik
-        #jacoRobot.setPosition2(liftPos11, True)
-        #jacoRobot.setPosition2(liftPos12, True)
-        #jacoRobot.setPosition2(liftPos13, True)
-        #jacoRobot.setPosition2(liftPos14, True)
-
-        # Robot Geser Kiri
-        #jacoRobot.setPosition2(liftPos21, True)
-        #jacoRobot.setPosition2(liftPos22, True)
-        #jacoRobot.setPosition2(liftPos23, True)
-        #jacoRobot.setPosition2(liftPos24, True)
-        #jacoRobot.setPosition2(liftPos25, True)
-
-        # Robot Turun
-        #jacoRobot.setPosition2(liftPos2, True)
-        #jacoRobot.setPosition2(goalPos, True)
-        #jacoRobot.gripperRelease()
-        #time.sleep(1)
-        #jacoRobot.setPosition2(liftPos3, True)
 # ====================================================
 
 
@@ -211,9 +190,6 @@ time.sleep(1)
 # start thread:
 t = threading.Thread(target=thread_robotMovement)
 t.start()
-
-
-
 
 
 # MAIN PRORGAM:

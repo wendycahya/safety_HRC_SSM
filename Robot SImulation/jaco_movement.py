@@ -65,6 +65,56 @@ DPos13 = [550, 40, 200, 180, 0, 0]
 DPos14 = [550, 40, 100, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 
+def moveToGoal():
+    jacoRobot.setPosition2(movePos21, True)
+    jacoRobot.setPosition2(movePos22, True)
+    jacoRobot.setPosition2(movePos23, True)
+    jacoRobot.setPosition2(movePos24, True)
+    jacoRobot.setPosition2(movePos25, True)
+
+def moveToBack():
+    jacoRobot.setPosition2(movePos25, True)
+    jacoRobot.setPosition2(movePos24, True)
+    jacoRobot.setPosition2(movePos23, True)
+    jacoRobot.setPosition2(movePos22, True)
+    jacoRobot.setPosition2(movePos21, True)
+
+def pick_goDown():
+    jacoRobot.setPosition2(objPos3, True)
+    jacoRobot.setPosition2(objPos1, True)
+
+def pick_goUp():
+    jacoRobot.setPosition2(objPos2, True)
+    jacoRobot.setPosition2(objPos3, True)
+
+def place_A():
+    jacoRobot.setPosition2(APos11, True)
+    jacoRobot.setPosition2(APos12, True)
+    jacoRobot.setPosition2(APos13, True)
+    jacoRobot.setPosition2(APos14, True)
+    jacoRobot.setPosition2(APlace, True)
+
+def place_B():
+    jacoRobot.setPosition2(BPos11, True)
+    jacoRobot.setPosition2(BPos12, True)
+    jacoRobot.setPosition2(BPos13, True)
+    jacoRobot.setPosition2(BPos14, True)
+    jacoRobot.setPosition2(BPlace, True)
+
+def place_C():
+    jacoRobot.setPosition2(CPos11, True)
+    jacoRobot.setPosition2(CPos12, True)
+    jacoRobot.setPosition2(CPos13, True)
+    jacoRobot.setPosition2(CPos14, True)
+    jacoRobot.setPosition2(CPlace, True)
+
+def place_D():
+    jacoRobot.setPosition2(DPos11, True)
+    jacoRobot.setPosition2(DPos12, True)
+    jacoRobot.setPosition2(DPos13, True)
+    jacoRobot.setPosition2(DPos14, True)
+    jacoRobot.setPosition2(DPlace, True)
+
 # THREAD FUNCTION:
 # Multithread function khusus buat menggerakkan robot
 # Program ini akan terus melalukan looping pick & place
@@ -73,125 +123,44 @@ def thread_robotMovement():
     jacoRobot.setSpeed(1200, 90)
     while True:
         jacoRobot.gripperRelease()
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
+        pick_goDown()
         jacoRobot.gripperCatch()
-        jacoRobot.setPosition2(objPos2, True)
-        jacoRobot.setPosition2(objPos3, True)
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(APos11, True)
-        jacoRobot.setPosition2(APos12, True)
-        jacoRobot.setPosition2(APos13, True)
-        jacoRobot.setPosition2(APos14, True)
-        jacoRobot.setPosition2(APlace, True)
-
+        pick_goUp()
+        moveToGoal()
+        place_A()
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
+        moveToBack()
 
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
+        pick_goDown()
         jacoRobot.gripperCatch()
-
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-
-        jacoRobot.setPosition2(BPos11, True)
-        jacoRobot.setPosition2(BPos12, True)
-        jacoRobot.setPosition2(BPos13, True)
-        jacoRobot.setPosition2(BPos14, True)
-        jacoRobot.setPosition2(BPlace, True)
-
+        pick_goUp()
+        moveToGoal()
+        place_B()
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
+        moveToBack()
 
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
+        pick_goDown()
         jacoRobot.gripperCatch()
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(CPos11, True)
-        jacoRobot.setPosition2(CPos12, True)
-        jacoRobot.setPosition2(CPos13, True)
-        jacoRobot.setPosition2(CPos14, True)
-        jacoRobot.setPosition2(CPlace, True)
-
+        pick_goUp()
+        moveToGoal()
+        place_C()
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-        jacoRobot.setPosition2(movePos25, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos21, True)
+        moveToBack()
 
-        jacoRobot.setPosition2(objPos3, True)
-        jacoRobot.setPosition2(objPos1, True)
+        pick_goDown()
         jacoRobot.gripperCatch()
-
-        jacoRobot.setPosition2(movePos21, True)
-        jacoRobot.setPosition2(movePos22, True)
-        jacoRobot.setPosition2(movePos23, True)
-        jacoRobot.setPosition2(movePos24, True)
-        jacoRobot.setPosition2(movePos25, True)
-
-        jacoRobot.setPosition2(DPos11, True)
-        jacoRobot.setPosition2(DPos12, True)
-        jacoRobot.setPosition2(DPos13, True)
-        jacoRobot.setPosition2(DPos14, True)
-        jacoRobot.setPosition2(DPlace, True)
-
+        pick_goUp()
+        moveToGoal()
+        place_D()
         jacoRobot.gripperRelease()
         time.sleep(1)
 
-
-
-        # Robot Naik
-        #jacoRobot.setPosition2(liftPos11, True)
-        #jacoRobot.setPosition2(liftPos12, True)
-        #jacoRobot.setPosition2(liftPos13, True)
-        #jacoRobot.setPosition2(liftPos14, True)
-
-        # Robot Geser Kiri
-        #jacoRobot.setPosition2(liftPos21, True)
-        #jacoRobot.setPosition2(liftPos22, True)
-        #jacoRobot.setPosition2(liftPos23, True)
-        #jacoRobot.setPosition2(liftPos24, True)
-        #jacoRobot.setPosition2(liftPos25, True)
-
-        # Robot Turun
-        #jacoRobot.setPosition2(liftPos2, True)
-        #jacoRobot.setPosition2(goalPos, True)
-        #jacoRobot.gripperRelease()
-        #time.sleep(1)
-        #jacoRobot.setPosition2(liftPos3, True)
 # ====================================================
 
 
