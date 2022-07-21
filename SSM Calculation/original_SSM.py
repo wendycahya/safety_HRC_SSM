@@ -17,18 +17,19 @@ def Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr):
     Vrmax = ((Sp - (Vh*T) - Ctot) / T) - (ac*pow(Ts,2)/(2*T))
     return Vrmax
 
-Vr = 2
-Vh = 1.6
+#SSM variables
+Vr = 2000
+Vh = 1600
 Tr = 0.41
-ac = 2
-C  = 0.1
-Zd = 0.09
-Zr = 0.025
+ac = 2000
+C = 1200
+Zd = 90
+Zr = 25
 
 Sp = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
 print("Separation Minimum Distance Calculation: ", Sp)
 
-Scurrent = 5
+Scurrent = 6000
 
 #logical SSM send robot
 if Scurrent < Sp:
