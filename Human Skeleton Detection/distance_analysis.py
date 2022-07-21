@@ -86,7 +86,7 @@ coff = np.polyfit(x, y, 2)
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-write_file = "output.csv"
+write_file = "nose_distance_analysis.csv"
 
 #Device connection
 fpsReader = cvzone.FPS()
@@ -134,8 +134,9 @@ with open(write_file, "wt", encoding="utf-8") as output:
                 f = 714 #finding the average for focal length
                 d = (W*f) / w
                 #print(d)
-                dist = round(d, 3)
-                cvzone.putTextRect(img, f'Depth: {dist} cm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
+                d = d * 10
+                dist_eye = round(d, 3)
+                #cvzone.putTextRect(img, f'Depth: {dist} cm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
 
 
 
@@ -161,6 +162,15 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     xyzNose = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,
                                landmarks[mp_pose.PoseLandmark.NOSE.value].y,
                                landmarks[mp_pose.PoseLandmark.NOSE.value].z]
+
+                    xyzLHand = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,
+                               landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y,
+                               landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].z]
+
+                    xyzRHand = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,
+                                landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y,
+                                landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].z]
+
                     # landmarks shoulder left and right
                     rightShoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
                                      landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y,
@@ -184,10 +194,29 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
                     # read the Xn
                     A, B, C = coff
-                    RAWdist = round(Shomid[2] * 100, 3)
-                    distanceCM = A * RAWdist ** 2 + B * RAWdist + C
+
+                    #regression value in mm
+                    RAWdist_shoulder = round(Shomid[2] * 1000, 3)
+                    dist_midshoulder = A * RAWdist_shoulder ** 2 + B * RAWdist_shoulder + C
+
+                    RAW_nose = round(xyzNose[2] * 1000, 3)
+                    dist_nose = A * RAW_nose ** 2 + B * RAW_nose + C
+
+                    RAW_LHand = round(xyzLHand[2] * 1000, 3)
+                    dist_LHand = A * RAW_LHand ** 2 + B * RAW_LHand + C
+
+                    RAW_RHand = round(xyzRHand[2] * 1000, 3)
+                    dist_RHand = A * RAW_RHand ** 2 + B * RAW_RHand + C
+
+
+                    dist_compare = np.array([dist_nose, dist_midshoulder, dist_LHand, dist_RHand, dist_eye])
+                    print("Distance comparison ", dist_nose, dist_midshoulder, dist_LHand, dist_RHand, dist_eye)
                     # shoulder distance
                     Xn1D = round(Shodis, 4)
+
+
+
+
                     vel = (Xn1D - Xn_last1D) / ts
                     vel = abs(vel)
                     # Xn = [round(Shomid[0],4), round(Shomid[1],4), round(distanceCM,4)]
@@ -196,8 +225,9 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
                     Sp = SSM_calculation(Vr, vel, Tr, ac, Ch, Cr)
                     Sp = round(Sp, 4)
-                    disHR = distanceCM / 100
-
+                    #disHR = distanceCM / 100
+                    distHR = dist_compare.min()
+                    print("distance selected ", distHR)
                     # background information
                     cv2.rectangle(img, (8, 0), (250, 120), (255, 255, 255), -1)
                     cv2.rectangle(img, (360, 0), (600, 80), (255, 255, 255), -1)
@@ -213,7 +243,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                                 )
 
                     ShodisXY, ShoXYmid = center_pointXY(leftShoulder, rightShoulder)
-                    cv2.putText(img, 'Distance (z) = ' + str(round(distanceCM, 4)) + ' cm',
+                    cv2.putText(img, 'Distance (z) = ' + str(round(distHR, 4)) + ' cm',
                                 (10, 100),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
                                 )
@@ -233,7 +263,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                                 (425, 20),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
                                 )
-                    cv2.putText(img, 'HR dist = ' + str(round(disHR, 4)) + ' m',
+                    cv2.putText(img, 'HR dist = ' + str(round(distHR, 4)) + ' m',
                                 (425, 40),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
                                 )
@@ -271,10 +301,10 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     #            )
                     #    cv2.circle(image, (380,40), radius = 10, color =(0,0,255), thickness = 20)
 
-                    if disHR < Spmin:
+                    if distHR < Spmin:
                         #robot stop
                         print("robot stop")
-                    elif Sp >= disHR and Spmin >= disHR:
+                    elif Sp >= distHR and Spmin >= distHR:
                         #collaboration area
 
                         cv2.putText(img, 'Mode = Collaboration',
@@ -287,7 +317,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                         # elseif z robot greater then z face human area
                         # else
 
-                    elif Sp + 0.0001 < disHR and Sp + 0.1 > disHR:
+                    elif Sp + 0.0001 < distHR and Sp + 0.1 > distHR:
                         cv2.putText(img, 'Mode = Reduction Area',
                                     (420, 60),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
@@ -318,14 +348,14 @@ with open(write_file, "wt", encoding="utf-8") as output:
         #Vmax allowable
 
         #area calculation
-                print("lokasi hidung ", xyzNose[1])
-                print("lokasi shoulder", Shomid[1])
-                print("lokasi hips ", Hipmid[1])
+                #print("lokasi hidung ", xyzNose[1])
+                #print("lokasi shoulder", Shomid[1])
+                #print("lokasi hips ", Hipmid[1])
 
                 t.sleep(0.5)
                 #distance calculation robot speed
                 Sp = 50
-                if dist < Sp:
+                if distHR < Sp:
                     #speed 0
                     print("Robot berhenti")
                     #ur10_robot.setSpeed(10, 1)
@@ -340,11 +370,12 @@ with open(write_file, "wt", encoding="utf-8") as output:
                                       mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
                                       mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                       )
+            #np.array([dist_nose, dist_midshoulder, dist_LHand, dist_RHand, dist_eye])
+            #output.write(str(interval) + ',' + str(dist_nose) + ',' + str(dist_midshoulder) + ',' + str(dist_LHand) +
+            #             ',' + str(dist_RHand) + ',' + str(dist_eye) + ',' + str(distHR) + '\n')
+            output.write(str(interval) + ',' + str(xyzNose[2]) + '\n')
 
-            output.write(str(interval) + ',' + str(Shodis) + ',' + str(vel) + '\n')
-
-
-            cv2.imshow("SSM Application", img)
+            cv2.imshow("Distance Analysis", img)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
