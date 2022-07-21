@@ -1,5 +1,5 @@
 #Robot library
-import time
+import time as t
 from include.coppeliasim import CoppeliaSim, CoppeliaArmRobot
 import threading
 from datetime import datetime
@@ -58,7 +58,7 @@ Vr = 2000
 Vh = 1600
 Tr = 0.41
 ac = 2000
-C = 1000
+C = 1200
 Zd = 90
 Zr = 25
 
@@ -70,21 +70,33 @@ Xn_last = [0, 0, 0]
 velX, velY, velZ = [0, 0, 0]
 ts = 0.05
 
+#velocity human
+velHum = 1600
+
 XnRob = [0, 0, 0]
 XnRob_last = [0, 0, 0]
 velXR, velYR, velZR = [0, 0, 0]
-#Sp = SSM_calculation(Vr, Vh, Tr, ac, Ch, Cr)
+#Sp = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
 interval = 0
 Vrmax = 0
 Vr_max_command = 0
 
+#Robot Velocity
+
 vrchest = 230
 vrface = 60
-vrstop = 1
+vrstop = 0
 vrmax = 2000
+vrot = 90
+velRob = 0
+robotZ = 0
 
 distView = 0
 sampleDistance = 1
+
+Spmax = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
+Sp = Spmax
+Scurrent = Spmax + 2000
 #distance measurement
 #x shoulder in cm
 #y real measurement
@@ -105,7 +117,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 #information
-write_file = "output_eye_humanmidpointdistance.csv"
+write_file = "test 1.csv"
 mode_collab = 0
 
 #====================ROBOT POSITION==========================
@@ -315,7 +327,7 @@ def thread_robotMovement():
             break
 
         jacoRobot.gripperRelease()
-        time.sleep(1)
+        t.sleep(1)
 
         moveToBack()
 
@@ -326,18 +338,18 @@ def thread_robotMovement():
 
 # ROBOT INITIALIZATION:
 # ====================================================
-mSim=CoppeliaSim()
-ret=mSim.connect(19997)
+mSim = CoppeliaSim()
+ret = mSim.connect(19997)
 if ret == -1:
     exit()
 
 # Initialize the robot model
 jacoRobot = CoppeliaArmRobot("Jaco")
-time.sleep(1)
+t.sleep(1)
 
 # start thread:
-t = threading.Thread(target=thread_robotMovement)
-t.start()
+thr = threading.Thread(target=thread_robotMovement)
+thr.start()
 
 # MAIN PRORGAM:
 # ===== camera installation =====
@@ -358,8 +370,310 @@ with open(write_file, "wt", encoding="utf-8") as output:
         #curRobotPos = jacoRobot.readPosition()
         #jacoRobot.setSpeed(10, 90)
         #print("Posisi terbaca", curRobotPos)
+
+        # === Robot analysis Velocity ===
+        curRobotPos = jacoRobot.readPosition()
+        print("robot position ", curRobotPos[0], curRobotPos[1], curRobotPos[2])
+
+        XnRob = [curRobotPos[0], curRobotPos[1], curRobotPos[2]]
+        velR = velXYZ(XnRob, XnRob_last, ts)
+        print("Robot velocity X Y Z: ", velR[0], velR[1], velR[2])
+
+        VelRnew = (velR[0] + velR[1] + velR[2]) / 3
+        VelRnew = abs(VelRnew)
+        print("Robor average velocity", VelRnew)
+    # ===== Visualization information ======
+        # ===== background information =====
+        cv2.rectangle(img, (8, 0), (250, 110), (255, 255, 255), -1)
+        cv2.rectangle(img, (350, 0), (650, 110), (255, 255, 255), -1)
+
+        # ===== information visualization =====
+        # ====== left information
+        cv2.putText(img, 'Vh = ' + str(round(velHum, 4)) + ' mm/s',
+                    (10, 20),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                    )
+        cv2.putText(img, 'Vr = ' + str(round(velRob, 4)) + ' mm/s',
+                    (10, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                    )
+        cv2.putText(img, 'Vrmax = ' + str(round(Vr_max_command, 4)) + ' mm/s',
+                    (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                    )
+        cv2.putText(img, 'Robot (z) = ' + str(round(robotZ, 4)) + ' mm',
+                    (10, 80),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                    )
+
+        if faces:
+            with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+                #skeleton detection
+                face = faces[0]
+                #print(faces[0])
+                pointLeft = face[145]
+                pointRight = face[374]
+                #v2.line(imgMesh, pointLeft, pointRight, (0, 200, 0), 3)
+                #cv2.circle(imgMesh, pointLeft, 5, (255, 0, 255), cv2.FILLED)
+                #cv2.circle(imgMesh, pointRight, 5, (255, 0, 255), cv2.FILLED)
+                w, _ = detector.findDistance(pointLeft, pointRight)
+                #center = bboxs[0]["center"]
+                #print(center)
+                #cv2.circle(img, center, 8, (255, 0, 255), cv2.FILLED)
+                #print(w)
+                W = 6.3  # default real width eyes distance
+                #Finding the focal length
+                #d = 60  #distance human and camera
+                #f = (w*d) / W
+                #print(f)
+                #finding distance
+                f = 714 #finding the average for focal length
+                d = (W*f) / w
+                #print(d)
+                d = d * 10 # distance in mm
+                eye_dist = round(d, 3)
+
+
+
+            #skeleton mediapipe migrasion
+                # Recolor image to RGB
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                img.flags.writeable = False
+                # Make detection
+                results = pose.process(img)
+                # Recolor back to BGR
+                img.flags.writeable = True
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+                # Extract landmarks
+                try:
+                    landmarks = results.pose_landmarks.landmark
+                    # Get coordinates
+                    xyzFoot = [landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].x,
+                               landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].y,
+                               landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value].z]
+
+                    xyzKnee = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,
+                               landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y,
+                               landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].z]
+
+                    xyzNose = [landmarks[mp_pose.PoseLandmark.NOSE.value].x,
+                               landmarks[mp_pose.PoseLandmark.NOSE.value].y,
+                               landmarks[mp_pose.PoseLandmark.NOSE.value].z]
+                    # landmarks shoulder left and right
+                    rightShoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
+                                     landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y,
+                                     landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].z]
+                    leftShoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
+                                    landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y,
+                                    landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].z]
+
+                    rightHip = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,
+                                landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y,
+                                landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].z]
+                    leftHip = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,
+                               landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y,
+                               landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].z]
+
+                    # Calculate angle
+                    Shodis, Shomid = center_point(leftShoulder, rightShoulder)
+                    Hipdis, Hipmid = center_point(leftHip, rightHip)
+
+                    # distance mid
+                    middis, midCoor = center_point(Shomid, Hipmid)
+
+                    # read the Xn
+                    RAWdist = round(Shomid[2] * 100, 3)
+                    distanceCM = A * RAWdist ** 2 + B * RAWdist + C
+                    # shoulder distance
+                    Xn1D = round(Shodis, 4)
+                    vel = (Xn1D - Xn_last1D) / ts
+
+                    vel = abs(vel)
+                    # Xn = [round(Shomid[0],4), round(Shomid[1],4), round(distanceCM,4)]
+                    # velX, velY, veLZ = velXYZ(Xn, Xn_last, ts)
+                    # print("Nilai Vel x: ", velX , "Nilai Vel y: ", velY ," Nilai Vel z:", velZ)
+
+
+
+                    # Scol active pada saat terdapat vr pada rentang kecepatan
+                    # Human Height detection
+                    noseLoc = Ah * xyzNose[1] ** 2 + Bh * xyzNose[1] + Ch
+                    shoulderLoc = Ah * Shomid[1] ** 2 + Bh * Shomid[1] + Ch
+                    hipsLoc = Ah * Hipmid[1] ** 2 + Bh * Hipmid[1] + Ch
+
+                    zRob = curRobotPos[2]
+                    minHead = 150
+                    maxHead = 180
+                    zHead = [minHead, maxHead]
+                    minChest = 100
+                    maxChest = 140
+                    zChest = [minChest, maxChest]
+
+
+                    #print("lokasi hidung ", noseLoc)
+                    #print("lokasi mid shoulder ", shoulderLoc)
+                    #print("lokasi mid hips ", hipsLoc)
+
+
+                # ===== SSM calculation ======
+                    Sp = SSM_calculation(VelRnew, Vh, Tr, ac, C, Zd, Zr)
+                    Sp = round(Sp, 4)
+                    disHR = distanceCM / 100
+
+                    Spmin = vel + C + Zd + Zr
+                    Spspace = Sp - Spmin
+                    Scol = Spmin + Spspace
+                    # separation protective condition
+                    # if Spmin > disHR:
+                    #    cv2.putText(image, 'Mode = STOPPPPPPPPPPP',
+                    #            (420,60),
+                    #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                    #            )
+                    #    cv2.circle(image, (380,40), radius = 10, color =(0,0,255), thickness = 20)
+
+                    Vr_max_command = Vr_max(Sp, Vh, VelRnew, Tr, ac, C, Zd, Zr)
+
+
+
+
+                # ===== information visualization =====
+                # left monitoring input
+                    velHum = vel * 1000
+                    velRob = VelRnew
+                    ShodisXY, ShoXYmid = center_pointXY(leftShoulder, rightShoulder)
+                    robotZ = curRobotPos[2]
+
+
+
+                #  right monitoring output
+                    cv2.putText(img, 'Sp = ' + str(Sp) + ' mm',
+                                (410, 20),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                )
+                    Spmin = round(Spmin, 4) + 300
+                    cv2.putText(img, 'Sp min = ' + str(Spmin) + ' mm',
+                                (410, 40),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                )
+                    distView = eye_dist
+                    cv2.putText(img, 'HR distance = ' + str(round(distView, 4)) + ' mm',
+                                (410, 60),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                )
+
+                    # Skeleton visualization
+                    cv2.putText(img, str(Shodis),
+                                tuple(np.multiply([Shomid[0], Shomid[1]], [640, 480]).astype(int)),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA
+                                )
+
+                    cv2.circle(img, tuple(np.multiply([Shomid[0], Shomid[1]], [640, 480]).astype(int)), radius=5,
+                               color=(255, 255, 0), thickness=10)
+
+                    # Visualize
+                    cv2.putText(img, str(Hipdis),
+                                tuple(np.multiply([Hipmid[0], Hipmid[1]], [640, 480]).astype(int)),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA
+                                )
+
+                    cv2.circle(img, tuple(np.multiply([Hipmid[0], Hipmid[1]], [640, 480]).astype(int)), radius=5,
+                               color=(255, 255, 0), thickness=10)
+
+                    cv2.line(img, tuple(np.multiply([Shomid[0], Shomid[1]], [640, 480]).astype(int)),
+                             tuple(np.multiply([Hipmid[0], Hipmid[1]], [640, 480]).astype(int)), (255, 255, 0),
+                             thickness=2)
+
+                    cv2.circle(img, tuple(np.multiply([midCoor[0], midCoor[1]], [640, 480]).astype(int)), radius=5,
+                               color=(255, 255, 0), thickness=10)
+
+                    # visualization for eyes distance
+                    #cvzone.putTextRect(img, f'Depth: {eye_dist} mm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
+                    cv2.putText(img, 'Current speed = ' + str(round(Vr, 4)) + ' mm/s',
+                                (410, 100),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                )
+
+                    Scurrent = eye_dist
+
+                    # logical SSM send robot
+                    if Scurrent < Spmin:
+                        print("Robot harus berhenti", vrstop)
+                        mode_collab = 4
+                        Vr = vrstop
+                        jacoRobot.setSpeed(Vr, vrot)
+                        cv2.putText(img,'Mode = Robot Stop',
+                                    (420, 80),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                    )
+                        cv2.circle(img, (380, 80), radius=10, color=(0, 0, 255), thickness=20)
+
+                    elif Spmin <= Scurrent and Scol > Scurrent:
+                        print("Robot working on collaboration mode")
+                        mode_collab = 3
+                        cv2.putText(img, 'Mode = Collaboration',
+                                    (420, 80),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                    )
+                        cv2.circle(img, (380, 80), radius=10, color=(255, 0, 0), thickness=20)
+
+                        if zHead[0] < zRob and zHead[1] >= zRob:
+                            print("Velocity limitation on head area: ", vrface)
+                            Vr = vrface
+                            jacoRobot.setSpeed(Vr, vrot)
+                        elif zChest[0] < zRob and zChest[1] >= zRob:
+                            print("Velocity limitation on chest: ", vrchest)
+                            Vr = vrchest
+                            jacoRobot.setSpeed(Vr, vrot)
+
+                    elif Scol <= Scurrent and Sp + 500 >= Scurrent:
+                        print("Robot speed reduction")
+                        mode_collab = 2
+                        # calculate the Vmax allowable
+                        print("Vmax allowable in this workspace: ", Vr_max_command)
+                        Vr = Vr_max_command
+                        jacoRobot.setSpeed(Vr, vrot)
+                        cv2.putText(img, 'Mode = Reduction Area',
+                                    (420, 80),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                    )
+                        cv2.circle(img, (380, 80), radius=10, color=(0, 255, 255), thickness=20)
+
+                    else:
+                        print("Robot bekerja maximal")
+                        mode_collab = 1
+                        Vr = vrmax
+                        jacoRobot.setSpeed(Vr, vrot)
+                        cv2.putText(img, 'Mode = Free Collision',
+                                    (420, 80),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
+                                    )
+                        cv2.circle(img, (380, 80), radius=10, color=(0, 255, 0), thickness=20)
+
+                    t.sleep(ts)
+                    # Xn_last = Xn
+                    Xn_last1D = Xn1D
+                    XnRob_last = XnRob
+                except:
+                    print("Bebas manusia")
+                    mode_collab = 1
+                    Sp = Spmax
+                    Scurrent = 5000
+                    jacoRobot.setSpeed(vrmax, vrot)
+
+                t.sleep(0.5)
+                #distance calculation robot speed
+
+
+            # Render detections
+            mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                      mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+                                      mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
+                                      )
+
+
+    # ===== research documentation =====
         interval = interval + 1
-        #output.write(str(interval) + ',' + str(curRobotPos[0])+ ',' + str(curRobotPos[1]) + ',' + str(curRobotPos[2]) + '\n')
+        output.write(str(interval) + ',' + str(Scurrent)+ ',' + str(Sp) + ',' + str(mode_collab) + '\n')
 
         cv2.imshow("SSM Application", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
