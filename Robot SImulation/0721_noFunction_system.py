@@ -251,10 +251,17 @@ def thread_robotMovement():
         print("reading the condition", progress)
 
         jacoRobot.gripperRelease()
-        pick_goDown()
+        jacoRobot.setPosition2(objPos3, True)
+        jacoRobot.setPosition2(objPos1, True)
         jacoRobot.gripperCatch()
-        pick_goUp()
-        moveToGoal()
+        jacoRobot.setPosition2(objPos2, True)
+        jacoRobot.setPosition2(objPos3, True)
+
+        jacoRobot.setPosition2(movePos21, True)
+        jacoRobot.setPosition2(movePos22, True)
+        jacoRobot.setPosition2(movePos23, True)
+        jacoRobot.setPosition2(movePos24, True)
+        jacoRobot.setPosition2(movePos25, True)
 
         # condition A belum terisi
         if (progress == [0, 0, 0, 0]):
@@ -385,8 +392,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
         print("Robor average velocity", VelRnew)
     # ===== Visualization information ======
         # ===== background information =====
-        cv2.rectangle(img, (8, 0), (250, 110), (255, 255, 255), -1)
-        cv2.rectangle(img, (350, 0), (650, 110), (255, 255, 255), -1)
+        cv2.rectangle(img, (0, 0), (650, 110), (255, 255, 255), -1)
 
         # ===== information visualization =====
         # ====== left information

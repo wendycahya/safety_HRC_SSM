@@ -85,7 +85,7 @@ Vr_max_command = 0
 
 vrchest = 230
 vrface = 60
-vrstop = 1
+vrstop = 0
 vrmax = 2000
 vrot = 90
 velRob = 0
@@ -118,7 +118,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 #information
-write_file = "test 1.csv"
+write_file = "SSM Original data.csv"
 mode_collab = 0
 
 #====================ROBOT POSITION==========================
@@ -382,7 +382,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
         VelRnew = (velR[0] + velR[1] + velR[2]) / 3
         VelRnew = abs(VelRnew)
-        print("Robor average velocity", VelRnew)
+        print("Robot average velocity", VelRnew)
     # ===== Visualization information ======
         # ===== background information =====
         cv2.rectangle(img, (8, 0), (250, 110), (255, 255, 255), -1)
@@ -447,8 +447,6 @@ with open(write_file, "wt", encoding="utf-8") as output:
                 #print(d)
                 d = d * 10 # distance in mm
                 eye_dist = round(d, 3)
-
-
 
             #skeleton mediapipe migrasion
                 # Recolor image to RGB
@@ -599,9 +597,9 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     Scurrent = eye_dist
 
                     # logical SSM send robot
-                    if Scurrent < Spmin:
+                    if Scurrent < Sp:
                         print("Robot harus berhenti", vrstop)
-                        mode_collab = 4
+                        mode_collab = 3
                         Vr = vrstop
                         jacoRobot.setSpeed(Vr, vrot)
                         cv2.putText(img,'Mode = Robot Stop',
@@ -610,25 +608,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                                     )
                         cv2.circle(img, (380, 80), radius=10, color=(0, 0, 255), thickness=20)
 
-                    elif Spmin <= Scurrent and Scol > Scurrent:
-                        print("Robot working on collaboration mode")
-                        mode_collab = 3
-                        cv2.putText(img, 'Mode = Collaboration',
-                                    (420, 80),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1, cv2.LINE_AA
-                                    )
-                        cv2.circle(img, (380, 80), radius=10, color=(255, 0, 0), thickness=20)
-
-                        if zHead[0] < zRob and zHead[1] >= zRob:
-                            print("Velocity limitation on head area: ", vrface)
-                            Vr = vrface
-                            jacoRobot.setSpeed(Vr, vrot)
-                        elif zChest[0] < zRob and zChest[1] >= zRob:
-                            print("Velocity limitation on chest: ", vrchest)
-                            Vr = vrchest
-                            jacoRobot.setSpeed(Vr, vrot)
-
-                    elif Scol <= Scurrent and Sp + 500 >= Scurrent:
+                    elif Sp <= Scurrent and Sp + 500 >= Scurrent:
                         print("Robot speed reduction")
                         mode_collab = 2
                         # calculate the Vmax allowable
@@ -676,9 +656,9 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
     # ===== research documentation =====
         interval = interval + 1
-        output.write(str(interval) + ',' + str(Scurrent)+ ',' + str(Sp) + ',' + str(mode_collab) + '\n')
+        output.write(str(interval) + ',' + str(Scurrent) + ',' + str(Sp) + ',' + str(mode_collab) + '\n')
 
-        cv2.imshow("SSM Application", img)
+        cv2.imshow("SSM Original Application", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
