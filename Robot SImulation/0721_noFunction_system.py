@@ -35,7 +35,7 @@ def center_pointXY(a,b):
     a = np.array(a)
     b = np.array(b)
     dXY = mt.sqrt(mt.pow((a[0] - b[0]),2) + mt.pow((a[1] - b[1]),2))
-    midXY = [(a[0]+b[0])/2 , (a[1]+b[1])/2]
+    midXY = [(a[0]+b[0])/2, (a[1]+b[1])/2]
     return dXY, midXY
 
 def velXYZ(Xn, Xn_last, ts):
