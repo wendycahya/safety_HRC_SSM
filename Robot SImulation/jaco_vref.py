@@ -20,7 +20,7 @@ goalPos = [500, 200, 0, 180, 0, 0]
 liftPos2 = [500, 200, 500, 180, 60, 0]
 liftPos3 = [500, 200, 100, 180, 0, 0]
 
-
+pos_list=[liftPos11,liftPos12,liftPos13]
 # THREAD FUNCTION:
 # Multithread function khusus buat menggerakkan robot
 # Program ini akan terus melalukan looping pick & place
