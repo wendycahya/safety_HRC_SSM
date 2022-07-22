@@ -49,7 +49,7 @@ while start:
 
 
 
-    window.blit(frame, (0, 0))
+    window.blit(frame, (18, 18))
 
 
     # Update Display

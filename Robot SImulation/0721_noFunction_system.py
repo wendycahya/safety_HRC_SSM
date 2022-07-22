@@ -85,7 +85,7 @@ Vr_max_command = 0
 
 vrchest = 230
 vrface = 60
-vrstop = 1
+vrstop = 0
 vrmax = 2000
 vrot = 90
 velRob = 0
@@ -132,59 +132,67 @@ liftPos12 = [400, -150, 200, 180, 0, 0]
 liftPos13 = [400, -150, 300, 180, 0, 0]
 liftPos14 = [400, -150, 400, 180, 0, 0]
 
-# movement to goal place
-liftPos21 = [500, -100, 500, 180, 60, 0]
-liftPos22 = [500, -50, 500, 180, 60, 0]
-liftPos23 = [500, 0,   500, 180, 60, 0]
-liftPos24 = [500, 100, 500, 180, 60, 0]
-liftPos25 = [500, 200, 500, 180, 60, 0]
-
-goalPos = [500, 200, 0, 180, 0, 0]
-liftPos2 = [500, 200, 500, 180, 60, 0]
-liftPos3 = [500, 200, 100, 180, 0, 0]
-
-
 #object pic location
 objPos1 = [500, 260, 0, 180, 0, 0]
 objPos2 = [500, 260, 50, 180, 0, 0]
 objPos3 = [500, 260, 100, 180, 0, 0]
-objPos3 = [500, 260, 300, 180, 0, 0]
+objPos4 = [500, 260, 150, 180, 0, 0]
+objPos5 = [500, 260, 200, 180, 0, 0]
+
 
 #movement to goal place
 movePos21 = [400, 200, 500, 180, 60, 0]
-movePos22 = [400, 100, 500, 180, 60, 0]
-movePos23 = [400, 0,   500, 180, 60, 0]
-movePos24 = [400, -50, 500, 180, 60, 0]
-movePos25 = [400, -100, 500, 180, 60, 0]
+movePos22 = [400, 150, 500, 180, 60, 0]
+movePos23 = [400, 100, 500, 180, 60, 0]
+movePos24 = [400, 50, 500, 180, 60, 0]
+movePos25 = [400, 0,   500, 180, 60, 0]
+movePos26 = [400, -50, 500, 180, 60, 0]
+movePos27 = [400, -100, 500, 180, 60, 0]
 
 
 #Cube A location
 APos11 = [400, -120, 400, 180, 0, 0]
-APos12 = [400, -120, 300, 180, 0, 0]
-APos13 = [400, -120, 200, 180, 0, 0]
-APos14 = [400, -120, 100, 180, 0, 0]
+APos12 = [400, -120, 350, 180, 0, 0]
+APos13 = [400, -120, 300, 180, 0, 0]
+APos14 = [400, -120, 250, 180, 0, 0]
+APos15 = [400, -120, 200, 180, 0, 0]
+APos16 = [400, -120, 150, 180, 0, 0]
+APos17 = [400, -120, 100, 180, 0, 0]
+APos18 = [400, -120, 50, 180, 0, 0]
 APlace = [400, -120, 0, 180, 0, 0]
 
 #Cube B location
 BPos11 = [550, -120, 400, 180, 0, 0]
-BPos12 = [550, -120, 300, 180, 0, 0]
-BPos13 = [550, -120, 200, 180, 0, 0]
-BPos14 = [550, -120, 100, 180, 0, 0]
+BPos12 = [550, -120, 350, 180, 0, 0]
+BPos13 = [550, -120, 300, 180, 0, 0]
+BPos14 = [550, -120, 250, 180, 0, 0]
+BPos15 = [550, -120, 200, 180, 0, 0]
+BPos16 = [550, -120, 150, 180, 0, 0]
+BPos17 = [550, -120, 100, 180, 0, 0]
+BPos18 = [550, -120, 50, 180, 0, 0]
 BPlace = [550, -120, 0, 180, 0, 0]
 
 
 #Cube C location
 CPos11 = [400, 40, 400, 180, 0, 0]
-CPos12 = [400, 40, 300, 180, 0, 0]
-CPos13 = [400, 40, 200, 180, 0, 0]
-CPos14 = [400, 40, 100, 180, 0, 0]
+CPos12 = [400, 40, 350, 180, 0, 0]
+CPos13 = [400, 40, 300, 180, 0, 0]
+CPos14 = [400, 40, 250, 180, 0, 0]
+CPos15 = [400, 40, 200, 180, 0, 0]
+CPos16 = [400, 40, 150, 180, 0, 0]
+CPos17 = [400, 40, 100, 180, 0, 0]
+CPos18 = [400, 40, 50, 180, 0, 0]
 CPlace = [400, 40, 0, 180, 0, 0]
 
 #Cube D location
 DPos11 = [550, 40, 400, 180, 0, 0]
-DPos12 = [550, 40, 300, 180, 0, 0]
-DPos13 = [550, 40, 200, 180, 0, 0]
-DPos14 = [550, 40, 100, 180, 0, 0]
+DPos12 = [550, 40, 350, 180, 0, 0]
+DPos13 = [550, 40, 300, 180, 0, 0]
+DPos14 = [550, 40, 250, 180, 0, 0]
+DPos15 = [550, 40, 200, 180, 0, 0]
+DPos16 = [550, 40, 150, 180, 0, 0]
+DPos17 = [550, 40, 100, 180, 0, 0]
+DPos18 = [550, 40, 50, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 
 def moveToGoal():
@@ -193,8 +201,12 @@ def moveToGoal():
     jacoRobot.setPosition2(movePos23, True)
     jacoRobot.setPosition2(movePos24, True)
     jacoRobot.setPosition2(movePos25, True)
+    jacoRobot.setPosition2(movePos26, True)
+    jacoRobot.setPosition2(movePos27, True)
 
 def moveToBack():
+    jacoRobot.setPosition2(movePos27, True)
+    jacoRobot.setPosition2(movePos26, True)
     jacoRobot.setPosition2(movePos25, True)
     jacoRobot.setPosition2(movePos24, True)
     jacoRobot.setPosition2(movePos23, True)
@@ -202,18 +214,28 @@ def moveToBack():
     jacoRobot.setPosition2(movePos21, True)
 
 def pick_goDown():
+    jacoRobot.setPosition2(objPos5, True)
+    jacoRobot.setPosition2(objPos4, True)
     jacoRobot.setPosition2(objPos3, True)
+    jacoRobot.setPosition2(objPos2, True)
     jacoRobot.setPosition2(objPos1, True)
 
 def pick_goUp():
+    jacoRobot.setPosition2(objPos1, True)
     jacoRobot.setPosition2(objPos2, True)
     jacoRobot.setPosition2(objPos3, True)
+    jacoRobot.setPosition2(objPos4, True)
+    jacoRobot.setPosition2(objPos5, True)
 
 def place_A():
     jacoRobot.setPosition2(APos11, True)
     jacoRobot.setPosition2(APos12, True)
     jacoRobot.setPosition2(APos13, True)
     jacoRobot.setPosition2(APos14, True)
+    jacoRobot.setPosition2(APos15, True)
+    jacoRobot.setPosition2(APos16, True)
+    jacoRobot.setPosition2(APos17, True)
+    jacoRobot.setPosition2(APos18, True)
     jacoRobot.setPosition2(APlace, True)
 
 def place_B():
@@ -221,6 +243,10 @@ def place_B():
     jacoRobot.setPosition2(BPos12, True)
     jacoRobot.setPosition2(BPos13, True)
     jacoRobot.setPosition2(BPos14, True)
+    jacoRobot.setPosition2(BPos15, True)
+    jacoRobot.setPosition2(BPos16, True)
+    jacoRobot.setPosition2(BPos17, True)
+    jacoRobot.setPosition2(BPos18, True)
     jacoRobot.setPosition2(BPlace, True)
 
 def place_C():
@@ -228,6 +254,10 @@ def place_C():
     jacoRobot.setPosition2(CPos12, True)
     jacoRobot.setPosition2(CPos13, True)
     jacoRobot.setPosition2(CPos14, True)
+    jacoRobot.setPosition2(CPos15, True)
+    jacoRobot.setPosition2(CPos16, True)
+    jacoRobot.setPosition2(CPos17, True)
+    jacoRobot.setPosition2(CPos18, True)
     jacoRobot.setPosition2(CPlace, True)
 
 def place_D():
@@ -235,6 +265,10 @@ def place_D():
     jacoRobot.setPosition2(DPos12, True)
     jacoRobot.setPosition2(DPos13, True)
     jacoRobot.setPosition2(DPos14, True)
+    jacoRobot.setPosition2(DPos15, True)
+    jacoRobot.setPosition2(DPos16, True)
+    jacoRobot.setPosition2(DPos17, True)
+    jacoRobot.setPosition2(DPos18, True)
     jacoRobot.setPosition2(DPlace, True)
 
 
@@ -249,53 +283,125 @@ def thread_robotMovement():
     jacoRobot.setSpeed(1200, 90)
     while True:
         print("reading the condition", progress)
-
+        #move to object
         jacoRobot.gripperRelease()
+        jacoRobot.setPosition2(objPos5, True)
+        jacoRobot.setPosition2(objPos4, True)
         jacoRobot.setPosition2(objPos3, True)
+        jacoRobot.setPosition2(objPos2, True)
         jacoRobot.setPosition2(objPos1, True)
         jacoRobot.gripperCatch()
+        jacoRobot.setPosition2(objPos1, True)
         jacoRobot.setPosition2(objPos2, True)
         jacoRobot.setPosition2(objPos3, True)
+        jacoRobot.setPosition2(objPos4, True)
+        jacoRobot.setPosition2(objPos5, True)
 
         jacoRobot.setPosition2(movePos21, True)
         jacoRobot.setPosition2(movePos22, True)
         jacoRobot.setPosition2(movePos23, True)
         jacoRobot.setPosition2(movePos24, True)
         jacoRobot.setPosition2(movePos25, True)
+        jacoRobot.setPosition2(movePos26, True)
+        jacoRobot.setPosition2(movePos27, True)
 
         # condition A belum terisi
         if (progress == [0, 0, 0, 0]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 1, 0, 0]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 0, 1, 0]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 0, 0, 1]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 1, 1, 0]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 1, 0, 1]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 0, 1, 1]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         elif (progress == [0, 1, 1, 1]):
             progress[0] = 1
             print("robot mengisi progress[0]", progress)
-            place_A()
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
         # condition B belum terisi
         elif (progress == [1, 0, 0, 0]):
             progress[1] = 1
@@ -523,11 +629,11 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     hipsLoc = Ah * Hipmid[1] ** 2 + Bh * Hipmid[1] + Ch
 
                     zRob = curRobotPos[2]
-                    minHead = 150
-                    maxHead = 180
+                    minHead = 1500
+                    maxHead = 1800
                     zHead = [minHead, maxHead]
-                    minChest = 100
-                    maxChest = 140
+                    minChest = 1000
+                    maxChest = 1400
                     zChest = [minChest, maxChest]
 
 
@@ -562,7 +668,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     velHum = vel * 1000
                     velRob = VelRnew
                     ShodisXY, ShoXYmid = center_pointXY(leftShoulder, rightShoulder)
-                    robotZ = curRobotPos[2]
+                    robotZ = 1000 + curRobotPos[2]
 
 
 
@@ -639,7 +745,8 @@ with open(write_file, "wt", encoding="utf-8") as output:
                         mode_collab = 2
                         # calculate the Vmax allowable
                         print("Vmax allowable in this workspace: ", Vr_max_command)
-                        Vr = Vr_max_command
+                        #Vr = Vr_max_command
+                        Vr = 1000
                         jacoRobot.setSpeed(Vr, vrot)
                         cv2.putText(img, 'Mode = Reduction Area',
                                     (420, 80),
