@@ -2,25 +2,10 @@ import threading
 import time
 from coppeliasim import CoppeliaSim, CoppeliaArmRobot
 
-# Position Data:
-pickPos = [400, -150, 0, 180, 0, 0]
-# naik tiap 100mm
-liftPos11 = [400, -150, 100, 180, 0, 0]
-liftPos12 = [400, -150, 200, 180, 0, 0]
-liftPos13 = [400, -150, 300, 180, 0, 0]
-liftPos14 = [400, -150, 400, 180, 0, 0]
 
-liftPos21 = [500, -100, 500, 180, 60, 0]
-liftPos22 = [500, -50, 500, 180, 60, 0]
-liftPos23 = [500, 0,   500, 180, 60, 0]
-liftPos24 = [500, 100, 500, 180, 60, 0]
-liftPos25 = [500, 200, 500, 180, 60, 0]
 
-goalPos = [500, 200, 0, 180, 0, 0]
-liftPos2 = [500, 200, 500, 180, 60, 0]
-liftPos3 = [500, 200, 100, 180, 0, 0]
-mSim=CoppeliaSim()
-ret=mSim.connect(19997)
+mSim = CoppeliaSim()
+ret = mSim.connect(19997)
 if ret == -1:
     exit()
 
@@ -43,6 +28,7 @@ class Job(threading.Thread):
     def run(self):
         jacoRobot.setSpeed(1200, 90)
         while self.__running.isSet():
+            print("out of for loop")
             for i in post_move:
                 self.__flag.wait()
                 jacoRobot.setPosition2(i, True)

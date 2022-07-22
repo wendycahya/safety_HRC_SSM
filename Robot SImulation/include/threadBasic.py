@@ -12,7 +12,7 @@ class Job(threading.Thread):
     def run(self):
         while self.__running.isSet():
 
-            for i in range(0,100):
+            for i in range(0, 100):
                 self.__flag.wait()
                 print(i)
                 time.sleep(1)

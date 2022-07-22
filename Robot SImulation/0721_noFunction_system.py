@@ -306,8 +306,7 @@ def thread_robotMovement():
         jacoRobot.setPosition2(movePos27, True)
 
         # condition A belum terisi
-        if (progress == [0, 0, 0, 0]):
-            progress[0] = 1
+        if (progress[0] == 0):
             print("robot mengisi progress[0]", progress)
             jacoRobot.setPosition2(APos11, True)
             jacoRobot.setPosition2(APos12, True)
@@ -318,121 +317,43 @@ def thread_robotMovement():
             jacoRobot.setPosition2(APos17, True)
             jacoRobot.setPosition2(APos18, True)
             jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 1, 0, 0]):
             progress[0] = 1
+        elif (progress[1] == 0):
             print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 0, 1, 0]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 0, 0, 1]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 1, 1, 0]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 1, 0, 1]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 0, 1, 1]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        elif (progress == [0, 1, 1, 1]):
-            progress[0] = 1
-            print("robot mengisi progress[0]", progress)
-            jacoRobot.setPosition2(APos11, True)
-            jacoRobot.setPosition2(APos12, True)
-            jacoRobot.setPosition2(APos13, True)
-            jacoRobot.setPosition2(APos14, True)
-            jacoRobot.setPosition2(APos15, True)
-            jacoRobot.setPosition2(APos16, True)
-            jacoRobot.setPosition2(APos17, True)
-            jacoRobot.setPosition2(APos18, True)
-            jacoRobot.setPosition2(APlace, True)
-        # condition B belum terisi
-        elif (progress == [1, 0, 0, 0]):
+            jacoRobot.setPosition2(BPos11, True)
+            jacoRobot.setPosition2(BPos12, True)
+            jacoRobot.setPosition2(BPos13, True)
+            jacoRobot.setPosition2(BPos14, True)
+            jacoRobot.setPosition2(BPos15, True)
+            jacoRobot.setPosition2(BPos16, True)
+            jacoRobot.setPosition2(BPos17, True)
+            jacoRobot.setPosition2(BPos18, True)
+            jacoRobot.setPosition2(BPlace, True)
             progress[1] = 1
-            print("robot mengisi progress[1]", progress)
-            place_B()
-        elif (progress == [1, 0, 1, 0]):
-            progress[1] = 1
-            print("robot mengisi progress[1]", progress)
-            place_B()
-        elif (progress == [1, 0, 0, 1]):
-            progress[1] = 1
-            print("robot mengisi progress[1]", progress)
-            place_B()
-        elif (progress == [1, 0, 1, 1]):
-            progress[1] = 1
-            print("robot mengisi progress[1]", progress)
-            place_B()
-        # condition C belum terisi
-        elif (progress == [1, 1, 0, 0]):
+        elif (progress[2] == 0):
+            print("robot mengisi progress[0]", progress)
+            jacoRobot.setPosition2(CPos11, True)
+            jacoRobot.setPosition2(CPos12, True)
+            jacoRobot.setPosition2(CPos13, True)
+            jacoRobot.setPosition2(CPos14, True)
+            jacoRobot.setPosition2(CPos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
             progress[2] = 1
-            print("robot mengisi progress[2]", progress)
-            place_C()
-        elif (progress == [1, 1, 0, 1]):
-            progress[2] = 1
-            print("robot mengisi progress[2]", progress)
-            place_C()
-        # condition D belum terisi
-        elif (progress == [1, 1, 1, 0]):
+        elif (progress[3] == 0):
+            print("robot mengisi progress[0]", progress)
+            jacoRobot.setPosition2(APos11, True)
+            jacoRobot.setPosition2(APos12, True)
+            jacoRobot.setPosition2(APos13, True)
+            jacoRobot.setPosition2(APos14, True)
+            jacoRobot.setPosition2(APos15, True)
+            jacoRobot.setPosition2(APos16, True)
+            jacoRobot.setPosition2(APos17, True)
+            jacoRobot.setPosition2(APos18, True)
+            jacoRobot.setPosition2(APlace, True)
             progress[3] = 1
-            print("robot mengisi progress[3]", progress)
-            place_D()
         if (progress == finish):
             print("Robot Stop\n")
             jacoRobot.gripperRelease()
