@@ -682,7 +682,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
 
     # ===== research documentation =====
         interval = interval + 1
-        output.write(str(interval) + ',' + str(Scurrent)+ ',' + str(Sp) + ',' + str(mode_collab) + '\n')
+        output.write(str(interval) + ',' + str(Scurrent) + ',' + str(Sp) + ',' + str(mode_collab) + '\n')
 
         cv2.imshow("SSM Application", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
