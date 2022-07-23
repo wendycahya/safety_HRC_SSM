@@ -48,6 +48,8 @@ class CoppeliaSim:
     def stopSimulation(self):
         sim.simxStopSimulation(self.clientID, sim.simx_opmode_blocking)
 
+    def message(self, message):
+        sim.simxAddStatusbarMessage(self.clientID, message, sim.simx_opmode_oneshot)
 
 # =======================================================================
 # Class Coppelia Arm Robot
