@@ -168,6 +168,7 @@ def Spmin(Vh, Tr, ac, C, Zd, Zr):
 # ===== initialization & variables declaration =====
 #SSM variables
 Vrinitial = 200
+Vr = Vrinitial
 Vh = 1600
 Tr = 0.41
 ac = 200
@@ -195,7 +196,7 @@ Vrmax = 0
 Vr_max_command = 0
 
 #Robot Velocity
-vrchest = 230
+vrchest = 100
 vrface = 60
 vrstop = 0
 vrmax = 200
@@ -214,7 +215,7 @@ Spmax = SSM_calculation(Vrinitial, Vh, Tr, ac, C, Zd, Zr)
 Sp = Spmax
 Scurrent = Spmax + 2000
 SpminInitial = Spmin(Vh, Tr, ac, C, Zd, Zr)
-
+SpminVal = SpminInitial
 #calibration position variable
 zHead = [0, 0]
 zChest = [0, 0]
@@ -540,8 +541,8 @@ if __name__ == '__main__':
                         hipsLoc = Ah * Hipmid[1] ** 2 + Bh * Hipmid[1] + Ch
 
                         zRob = curRobotPos[2] + 1000
-                        minHead = noseLoc
-                        maxHead = noseLoc
+                        minHead = noseLoc - 150
+                        maxHead = noseLoc + 150
                         zHead = [minHead, maxHead]
                         minChest = hipsLoc
                         maxChest = shoulderLoc
@@ -552,7 +553,7 @@ if __name__ == '__main__':
                         disHR = distanceCM / 100
                         #Spmin = 100
                         SpminVal = Spmin(Vh, Tr, ac, C, Zd, Zr)
-                        if Spmin < 0:
+                        if SpminVal > Sp:
                             SpminVal = SpminInitial
                         # separation protective condition
                         # if Spmin > disHR:
@@ -609,7 +610,7 @@ if __name__ == '__main__':
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
-                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_stop = font_reg.render("Stop", True, (242, 242, 247))
                             window.blit(text_stop, (467, 555))
                             pygame.draw.rect(window, red, (460, 588, 166, 81), border_radius=5)
@@ -620,7 +621,7 @@ if __name__ == '__main__':
                             server.resume()
                             print("Robot working on collaboration mode")
                             mode_collab = 3
-                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Collaboration", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, blue, (460, 588, 166, 81), border_radius=5)
@@ -638,7 +639,7 @@ if __name__ == '__main__':
                             else:
                                 Vr = Vr_max_command
                                 if Vr_max_command <= vrface:
-                                    Vr = 1000
+                                    Vr = 100
                                     jacoRobot.setSpeed(Vr, vrot)
                                     print("Succes send speed Vr Command")
                             jacoRobot.message("Collaboration speed")
@@ -650,10 +651,10 @@ if __name__ == '__main__':
                             # calculate the Vmax allowable
                             print("Vmax allowable in this workspace: ", Vr_max_command)
                             # Vr = Vr_max_command
-                            Vr = 1000
+                            Vr = 100
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Mid")
-                            pygame.draw.rect(window, purple, (467, 555, 160, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_reduce = font_reg.render("Reduce Speed", True, (242, 242, 247))
                             window.blit(text_reduce, (467, 555))
                             pygame.draw.rect(window, yellow, (460, 588, 166, 81), border_radius=5)
@@ -666,7 +667,7 @@ if __name__ == '__main__':
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Full Speed")
-                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_freespeed = font_reg.render("Full Speed", True, (242, 242, 247))
                             window.blit(text_freespeed, (467, 555))
                             pygame.draw.rect(window, green, (460, 588, 166, 81), border_radius=5)
@@ -683,7 +684,7 @@ if __name__ == '__main__':
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
-                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Stop", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, red, (460, 588, 166, 81), border_radius=5)
@@ -698,7 +699,7 @@ if __name__ == '__main__':
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Full Speed")
-                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Full Speed", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, green, (460, 588, 166, 81), border_radius=5)
@@ -769,27 +770,34 @@ if __name__ == '__main__':
             window.blit(text_veloRval, (1045, 156))
 
             # === Human domain
-            zHead[0] = round(zHead[0] * 10, 2)
+            zHead[0] = abs(round(zHead[0] * 10, 2))
+            if zHead[0] > 2000:
+                zHead[0] = 1800
             pygame.draw.rect(window, gray, (929, 358, 165, 29), border_radius=5)
             text_minHead = font_reg.render(str(zHead[0]) + " mm", True, (50, 50, 50))
             window.blit(text_minHead, (929, 358))
-
-            zHead[1] = round(zHead[1] * 10, 2)
+            if zHead[1] > 2000:
+                zHead[1] = 1800
+            zHead[1] = abs(round(zHead[1] * 10, 2))
             pygame.draw.rect(window, gray, (929, 391, 165, 29), border_radius=5)
             text_maxHead = font_reg.render(str(zHead[1]) + " mm", True, (50, 50, 50))
             window.blit(text_minHead, (929, 391))
 
-            zChest[0] = round(zChest[0] * 10, 2)
+            if zChest[0] > 2000:
+                zChest[0] = 1800
+            zChest[0] = abs(round(zChest[0] * 10, 2))
             pygame.draw.rect(window, gray, (935, 475, 165, 29), border_radius=5)
             text_minHead = font_reg.render(str(zChest[0]) + " mm", True, (50, 50, 50))
             window.blit(text_minHead, (935, 475))
 
-            zChest[1] = round(zChest[1] * 10, 2)
+            if zChest[1] > 2000:
+                zChest[1] = 1800
+            zChest[1] = abs(round(zChest[1] * 10, 2))
             pygame.draw.rect(window, gray, (935, 508, 165, 29), border_radius=5)
             text_minHead = font_reg.render(str(zChest[1]) + " mm", True, (50, 50, 50))
             window.blit(text_minHead, (935, 508))
 
-            velHum = round(velHum, 2)
+            velHum = abs(round(velHum, 2))
             pygame.draw.rect(window, gray, (1031, 329, 165, 29), border_radius=5)
             text_velHum = font_reg.render(str(velHum) + " mm/s", True, (50, 50, 50))
             window.blit(text_velHum, (1031, 329))
