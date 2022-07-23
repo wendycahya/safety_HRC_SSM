@@ -105,7 +105,7 @@ class CoppeliaArmRobot(CoppeliaSim):
 
     # Get current robot position
     def readPosition(self):
-        self.posData = [0,0,0,0,0,0]
+        self.posData = [0, 0, 0, 0, 0, 0]
         ret = sim.simxCallScriptFunction(self.clientID, self.script,
                                          sim.sim_scripttype_childscript,
                                          'remoteApi_getPosition',

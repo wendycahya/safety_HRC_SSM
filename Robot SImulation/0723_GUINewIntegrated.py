@@ -1,4 +1,5 @@
 #Robot library
+import math
 import time as t
 from include.coppeliasim import CoppeliaSim, CoppeliaArmRobot
 import threading
@@ -146,9 +147,9 @@ def center_pointXY(a,b):
     return dXY, midXY
 
 def velXYZ(Xn, Xn_last, ts):
-    velX = (Xn[0] - Xn_last[0]) / ts
-    velY = (Xn[1] - Xn_last[1]) / ts
-    velZ = (Xn[2] - Xn_last[2]) / ts
+    velX = (Xn_last[0] - Xn[0]) / ts
+    velY = (Xn_last[1] - Xn[1]) / ts
+    velZ = (Xn_last[2] - Xn[2]) / ts
 
     return velX, velY, velZ
 
@@ -159,12 +160,17 @@ def Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr):
     Vrmax = ((Sp - (Vh*T) - Ctot) / T) - (ac*pow(Ts, 2)/(2*T))
     return Vrmax
 
+def Spmin(Vh, Tr, ac, C, Zd, Zr):
+    Ctot = C + Zd + Zr
+    SpminVal = Vh * Tr + Ctot
+    return SpminVal
+
 # ===== initialization & variables declaration =====
 #SSM variables
-Vr = 2000
+Vrinitial = 200
 Vh = 1600
 Tr = 0.41
-ac = 2000
+ac = 200
 C = 1200
 Zd = 90
 Zr = 25
@@ -189,22 +195,30 @@ Vrmax = 0
 Vr_max_command = 0
 
 #Robot Velocity
-
 vrchest = 230
 vrface = 60
 vrstop = 0
-vrmax = 2000
+vrmax = 200
 vrot = 90
 velRob = 0
 robotZ = 0
+vel = 0
+RobotVrmax = 200
+
 
 distView = 0
 sampleDistance = 1
 pause_active = 0
-Spmax = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
+
+Spmax = SSM_calculation(Vrinitial, Vh, Tr, ac, C, Zd, Zr)
 Sp = Spmax
 Scurrent = Spmax + 2000
-Spmin = 0
+SpminInitial = Spmin(Vh, Tr, ac, C, Zd, Zr)
+
+#calibration position variable
+zHead = [0, 0]
+zChest = [0, 0]
+
 #distance measurement
 #x shoulder in cm
 #y real measurement
@@ -305,9 +319,10 @@ DPos18 = [550, 40, 50, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 DObjPlace =[DPos11, DPos12, DPos13, DPos14, DPos15, DPos16, DPos17, DPos18, DPlace]
 
-progress = [1, 1, 1, 0]
+progress = [0, 0, 0, 0]
 finish = [1, 1, 1, 1]
 start_time = datetime.now()
+
 class Job(threading.Thread):
     def __init__(self, *args, **kwargs):
         super(Job, self).__init__(*args, **kwargs)
@@ -317,7 +332,7 @@ class Job(threading.Thread):
         self.__running.set()      # 将running设置为True
 
     def run(self):
-        jacoRobot.setSpeed(1200, 90)
+        jacoRobot.setSpeed(200, 90)
         pygame.draw.rect(window, purple, (929, 602, 140, 29), border_radius=5)
         text_process = font_reg.render("PROCESS", True, (242, 242, 247))
         window.blit(text_process, (940, 600))
@@ -413,28 +428,36 @@ if __name__ == '__main__':
                     start = False
                     pygame.quit()
 
-            # Apply Logic
-
+    # ================= Apply Logic =================
             # Detect human skeleton
             success, img = cap.read()
             imgMesh, faces = detector.findFaceMesh(img, draw=False)
             imgFace, bboxs = detectFace.findFaces(img)
-            # imList, boxPose = detectPose.findPosition(imgPose, bboxWithHands=False)
-            # curRobotPos = jacoRobot.readPosition()
-            # jacoRobot.setSpeed(10, 90)
-            # print("Posisi terbaca", curRobotPos)
 
             # === Robot analysis Velocity ===
             curRobotPos = jacoRobot.readPosition()
             print("robot position ", curRobotPos[0], curRobotPos[1], curRobotPos[2])
-
-            XnRob = [curRobotPos[0], curRobotPos[1], curRobotPos[2]]
+            xRob = round(curRobotPos[0], 2)
+            yRob = round(curRobotPos[1], 2)
+            zRob = round(curRobotPos[2], 2)
+            XnRob = [xRob, yRob, zRob]
+            print("Robot Position X Y Z: ", xRob, yRob, zRob)
+            print("Robot Last Position X Y Z: ", XnRob_last[0], XnRob_last[1], XnRob_last[2])
             velR = velXYZ(XnRob, XnRob_last, ts)
             print("Robot velocity X Y Z: ", velR[0], velR[1], velR[2])
-
-            VelRnew = (velR[0] + velR[1] + velR[2]) / 3
+            # velR[0] = round(velR[0], 2)
+            # velR[1] = round(velR[1], 2)
+            # velR[2] = round(velR[2], 2)
+            VelRnew = math.sqrt(velR[0]**2 + velR[1]**2 + velR[2]**2)
             VelRnew = abs(VelRnew)
+            if VelRnew > RobotVrmax:
+                VelRnew = RobotVrmax
             print("Robot average velocity", VelRnew)
+            SpStatis = SSM_calculation(Vrinitial, Vh, Tr, ac, C, Zd, Zr)
+            print("SSM Statis", SpStatis)
+            # ===== SSM calculation ======
+            Sp = SSM_calculation(VelRnew, Vh, Tr, ac, C, Zd, Zr)
+            print("SSM Dynamic", Sp)
 
             if faces:
                 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
@@ -443,23 +466,10 @@ if __name__ == '__main__':
                     # print(faces[0])
                     pointLeft = face[145]
                     pointRight = face[374]
-                    # v2.line(imgMesh, pointLeft, pointRight, (0, 200, 0), 3)
-                    # cv2.circle(imgMesh, pointLeft, 5, (255, 0, 255), cv2.FILLED)
-                    # cv2.circle(imgMesh, pointRight, 5, (255, 0, 255), cv2.FILLED)
                     w, _ = detector.findDistance(pointLeft, pointRight)
-                    # center = bboxs[0]["center"]
-                    # print(center)
-                    # cv2.circle(img, center, 8, (255, 0, 255), cv2.FILLED)
-                    # print(w)
                     W = 6.3  # default real width eyes distance
-                    # Finding the focal length
-                    # d = 60  #distance human and camera
-                    # f = (w*d) / W
-                    # print(f)
-                    # finding distance
                     f = 714  # finding the average for focal length
                     d = (W * f) / w
-                    # print(d)
                     d = d * 10  # distance in mm
                     eye_dist = round(d, 3)
 
@@ -523,6 +533,7 @@ if __name__ == '__main__':
                         # print("Nilai Vel x: ", velX , "Nilai Vel y: ", velY ," Nilai Vel z:", velZ)
 
                         # Scol active pada saat terdapat vr pada rentang kecepatan
+
                         # Human Height detection
                         noseLoc = Ah * xyzNose[1] ** 2 + Bh * xyzNose[1] + Ch
                         shoulderLoc = Ah * Shomid[1] ** 2 + Bh * Shomid[1] + Ch
@@ -537,12 +548,12 @@ if __name__ == '__main__':
                         zChest = [minChest, maxChest]
 
 
-                        # ===== SSM calculation ======
-                        Sp = SSM_calculation(VelRnew, vel, Tr, ac, C, Zd, Zr)
                         #Sp = 400
                         disHR = distanceCM / 100
                         #Spmin = 100
-                        Spmin = abs(velHum) + C + Zd + Zr
+                        SpminVal = Spmin(Vh, Tr, ac, C, Zd, Zr)
+                        if Spmin < 0:
+                            SpminVal = SpminInitial
                         # separation protective condition
                         # if Spmin > disHR:
                         #    cv2.putText(image, 'Mode = STOPPPPPPPPPPP',
@@ -592,85 +603,8 @@ if __name__ == '__main__':
                         Scurrent = eye_dist
                         Scurrent = round(Scurrent, 2)
 
-                        # ======= Information Visualization =========
-
-                        # SSM output value
-                        pygame.draw.rect(window, gray, (233, 555, 196, 29), border_radius=5)
-                        text_currval = font_reg.render(str(Scurrent) + " mm", True, (50, 50, 50))
-                        window.blit(text_currval, (233, 555))
-
-                        Sp = round(Sp, 2)
-                        pygame.draw.rect(window, gray, (74, 584, 196, 29), border_radius=5)
-                        text_Spval = font_reg.render(str(Sp) + " mm", True, (50, 50, 50))
-                        window.blit(text_Spval, (74, 584))
-
-                        Spmin = round(Spmin, 2)
-                        pygame.draw.rect(window, gray, (115, 616, 196, 29), border_radius=5)
-                        text_Spminval = font_reg.render(str(Spmin) + " mm", True, (50, 50, 50))
-                        window.blit(text_Spminval, (115, 616))
-
-                        Vr_max_command = round(Vr_max_command, 2)
-                        pygame.draw.rect(window, gray, (118, 647, 196, 29), border_radius=5)
-                        text_vmaxcmdval = font_reg.render(str(Vr_max_command) + " mm/s", True, (50, 50, 50))
-                        window.blit(text_vmaxcmdval, (118, 647))
-
-                        # ============== Robot Domain ===============
-                        # +1000 depends on the table height
-                        curRobotPos[0] = round(curRobotPos[0] + 1000, 1)
-                        curRobotPos[1] = round(curRobotPos[1] + 1000, 1)
-                        curRobotPos[2] = round(curRobotPos[2] + 1000, 1)
-                        pygame.draw.rect(window, gray, (845, 119, 150, 29), border_radius=5)
-                        text_xRval = font_reg.render(str(curRobotPos[0]) + " mm", True, (50, 50, 50))
-                        window.blit(text_xRval, (855, 119))
-
-                        pygame.draw.rect(window, gray, (845, 156, 150, 29), border_radius=5)
-                        text_yRval = font_reg.render(str(curRobotPos[1]) + " mm", True, (50, 50, 50))
-                        window.blit(text_yRval, (855, 156))
-
-                        pygame.draw.rect(window, gray, (845, 194, 150, 29), border_radius=5)
-                        text_zRval = font_reg.render(str(curRobotPos[2]) + " mm", True, (50, 50, 50))
-                        window.blit(text_zRval, (855, 194))
-
-                        Vr = round(Vr, 2)
-                        pygame.draw.rect(window, gray, (1088, 125, 165, 29), border_radius=5)
-                        text_speedRval = font_reg.render(str(Vr) + " mm/s", True, (50, 50, 50))
-                        window.blit(text_speedRval, (1088, 125))
-
-                        VelRnew = round(VelRnew, 2)
-                        pygame.draw.rect(window, gray, (1045, 160, 165, 29), border_radius=5)
-                        text_speedRval = font_reg.render(str(VelRnew) + " mm/s", True, (50, 50, 50))
-                        window.blit(text_speedRval, (1045, 156))
-
-                    #=== Human domain
-                        zHead[0] = round(zHead[0] * 10, 2)
-                        pygame.draw.rect(window, gray, (929, 358, 165, 29), border_radius=5)
-                        text_minHead = font_reg.render(str(zHead[0]) + " mm", True, (50, 50, 50))
-                        window.blit(text_minHead, (929, 358))
-
-                        zHead[1] = round(zHead[1] * 10, 2)
-                        pygame.draw.rect(window, gray, (929, 391, 165, 29), border_radius=5)
-                        text_maxHead = font_reg.render(str(zHead[1]) + " mm", True, (50, 50, 50))
-                        window.blit(text_minHead, (929, 391))
-
-                        zChest[0] = round(zChest[0] * 10, 2)
-                        pygame.draw.rect(window, gray, (935, 475, 165, 29), border_radius=5)
-                        text_minHead = font_reg.render(str(zChest[0]) + " mm", True, (50, 50, 50))
-                        window.blit(text_minHead, (935, 475))
-
-                        zChest[1] = round(zChest[1] * 10, 2)
-                        pygame.draw.rect(window, gray, (935, 508, 165, 29), border_radius=5)
-                        text_minHead = font_reg.render(str(zChest[1]) + " mm", True, (50, 50, 50))
-                        window.blit(text_minHead, (935, 508))
-
-                        velHum = round(velHum, 2)
-                        pygame.draw.rect(window, gray, (1031, 329, 165, 29), border_radius=5)
-                        text_velHum = font_reg.render(str(velHum) + " mm/s", True, (50, 50, 50))
-                        window.blit(text_velHum, (1031, 329))
-
-
-
                         # logical SSM send robot
-                        if Scurrent < Spmin:
+                        if Scurrent < SpminVal:
                             server.pause()
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
@@ -682,7 +616,7 @@ if __name__ == '__main__':
 
                             jacoRobot.message("Robot stop")
                             t.sleep(0.5)
-                        elif Spmin <= Scurrent and Sp > Scurrent:
+                        elif SpminVal <= Scurrent and Sp > Scurrent:
                             server.resume()
                             print("Robot working on collaboration mode")
                             mode_collab = 3
@@ -744,7 +678,7 @@ if __name__ == '__main__':
                         Xn_last1D = Xn1D
                         XnRob_last = XnRob
                     except:
-                        if Scurrent < Spmin:
+                        if Scurrent < SpminVal:
                             server.pause()
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
@@ -784,6 +718,81 @@ if __name__ == '__main__':
             interval = interval + 1
             output.write(str(interval) + ',' + str(Scurrent) + ',' + str(Sp) + ',' + str(mode_collab) + '\n')
             print("Scurrent update ", Scurrent)
+
+            # ======= Information Visualization =========
+
+            # SSM output value
+            pygame.draw.rect(window, gray, (233, 555, 196, 29), border_radius=5)
+            text_currval = font_reg.render(str(Scurrent) + " mm", True, (50, 50, 50))
+            window.blit(text_currval, (233, 555))
+
+            Sp = round(Sp, 2)
+            pygame.draw.rect(window, gray, (74, 584, 196, 29), border_radius=5)
+            text_Spval = font_reg.render(str(Sp) + " mm", True, (50, 50, 50))
+            window.blit(text_Spval, (74, 584))
+
+            SpminVal = round(SpminVal, 2)
+            pygame.draw.rect(window, gray, (115, 616, 196, 29), border_radius=5)
+            text_Spminval = font_reg.render(str(SpminVal) + " mm", True, (50, 50, 50))
+            window.blit(text_Spminval, (115, 616))
+
+            Vr_max_command = round(Vr_max_command, 2)
+            pygame.draw.rect(window, gray, (118, 647, 196, 29), border_radius=5)
+            text_vmaxcmdval = font_reg.render(str(Vr_max_command) + " mm/s", True, (50, 50, 50))
+            window.blit(text_vmaxcmdval, (118, 647))
+
+            # ============== Robot Domain ===============
+            # +1000 depends on the table height
+            curRobotPos[0] = round(curRobotPos[0] + 1000, 1)
+            curRobotPos[1] = round(curRobotPos[1] + 1000, 1)
+            curRobotPos[2] = round(curRobotPos[2] + 1000, 1)
+            pygame.draw.rect(window, gray, (845, 119, 150, 29), border_radius=5)
+            text_xRval = font_reg.render(str(curRobotPos[0]) + " mm", True, (50, 50, 50))
+            window.blit(text_xRval, (855, 119))
+
+            pygame.draw.rect(window, gray, (845, 156, 150, 29), border_radius=5)
+            text_yRval = font_reg.render(str(curRobotPos[1]) + " mm", True, (50, 50, 50))
+            window.blit(text_yRval, (855, 156))
+
+            pygame.draw.rect(window, gray, (845, 194, 150, 29), border_radius=5)
+            text_zRval = font_reg.render(str(curRobotPos[2]) + " mm", True, (50, 50, 50))
+            window.blit(text_zRval, (855, 194))
+
+            Vr = round(Vr, 2)
+            pygame.draw.rect(window, gray, (1088, 125, 165, 29), border_radius=5)
+            text_speedRval = font_reg.render(str(Vr) + " mm/s", True, (50, 50, 50))
+            window.blit(text_speedRval, (1088, 125))
+
+            VelRnew = round(VelRnew, 2)
+            pygame.draw.rect(window, gray, (1045, 160, 170, 29), border_radius=5)
+            text_veloRval = font_reg.render(str(VelRnew) + " mm/s", True, (50, 50, 50))
+            window.blit(text_veloRval, (1045, 156))
+
+            # === Human domain
+            zHead[0] = round(zHead[0] * 10, 2)
+            pygame.draw.rect(window, gray, (929, 358, 165, 29), border_radius=5)
+            text_minHead = font_reg.render(str(zHead[0]) + " mm", True, (50, 50, 50))
+            window.blit(text_minHead, (929, 358))
+
+            zHead[1] = round(zHead[1] * 10, 2)
+            pygame.draw.rect(window, gray, (929, 391, 165, 29), border_radius=5)
+            text_maxHead = font_reg.render(str(zHead[1]) + " mm", True, (50, 50, 50))
+            window.blit(text_minHead, (929, 391))
+
+            zChest[0] = round(zChest[0] * 10, 2)
+            pygame.draw.rect(window, gray, (935, 475, 165, 29), border_radius=5)
+            text_minHead = font_reg.render(str(zChest[0]) + " mm", True, (50, 50, 50))
+            window.blit(text_minHead, (935, 475))
+
+            zChest[1] = round(zChest[1] * 10, 2)
+            pygame.draw.rect(window, gray, (935, 508, 165, 29), border_radius=5)
+            text_minHead = font_reg.render(str(zChest[1]) + " mm", True, (50, 50, 50))
+            window.blit(text_minHead, (935, 508))
+
+            velHum = round(velHum, 2)
+            pygame.draw.rect(window, gray, (1031, 329, 165, 29), border_radius=5)
+            text_velHum = font_reg.render(str(velHum) + " mm/s", True, (50, 50, 50))
+            window.blit(text_velHum, (1031, 329))
 
             imgRGB = np.rot90(img)
             frame = pygame.surfarray.make_surface(imgRGB).convert()
