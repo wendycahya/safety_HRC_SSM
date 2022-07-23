@@ -24,7 +24,7 @@ import pygame
 pygame.init()
 
 # Create Window/Display
-width, height = 1225, 700
+width, height = 1280, 700
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Human Robot Safety Collaboration")
 
@@ -39,10 +39,12 @@ green, yellow, blue, red, purple, gray = (20, 128, 10), (236, 190, 35), (0, 103,
 window.fill((255, 255, 255))
 
 # ===layout interface===
-pygame.draw.rect(window, gray, (677, 50, 533, 213), border_radius=5)
+pygame.draw.rect(window, gray, (667, 50, 590, 213), border_radius=5)
 pygame.draw.rect(window, gray, (18, 513, 640, 172), border_radius=5)
-pygame.draw.rect(window, gray, (677, 276, 533, 409), border_radius=5)
+pygame.draw.rect(window, gray, (667, 276, 590, 409), border_radius=5)
+#mode collaboration
 pygame.draw.rect(window, purple, (442, 523, 203, 152), border_radius=5)
+
 
 #img assets
 imgKinova = pygame.image.load("assets/kinova.png").convert()
@@ -55,6 +57,8 @@ window.blit(imgHuman, (693, 325))
 # ===Title Text===
 text = font.render("Safety Human Robot Collaboration", True, (50, 50, 50))
 window.blit(text, (748, 13))
+
+
 
 # ====Robot domain===
 text_Robot = font.render("Robot Domain", True, (50, 50, 50))
@@ -111,9 +115,15 @@ window.blit(text_vrMax, (28, 646))
 # ===mode collaboration===
 text_mode = font_reg.render("Mode", True, (242, 242, 247))
 window.blit(text_mode, (511, 526))
+#robot task
+pygame.draw.rect(window, purple, (913, 547, 339, 127), border_radius=5)
+pygame.draw.rect(window, gray, (1077, 557, 166, 110), border_radius=5)
+
+text_Rtask = font.render("Robot Task", True, (242, 242, 247))
+window.blit(text_Rtask, (929, 557))
 
 
-#=================function SSM =============================
+# =================function SSM =============================
 def SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr):
     Tb = Vr / ac
     Ss  = pow(Vr, 2) / (2*ac)
@@ -295,7 +305,7 @@ DPos18 = [550, 40, 50, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 DObjPlace =[DPos11, DPos12, DPos13, DPos14, DPos15, DPos16, DPos17, DPos18, DPlace]
 
-progress = [0, 0, 0, 0]
+progress = [1, 1, 1, 0]
 finish = [1, 1, 1, 1]
 start_time = datetime.now()
 class Job(threading.Thread):
@@ -308,6 +318,13 @@ class Job(threading.Thread):
 
     def run(self):
         jacoRobot.setSpeed(1200, 90)
+        pygame.draw.rect(window, purple, (929, 602, 140, 29), border_radius=5)
+        text_process = font_reg.render("PROCESS", True, (242, 242, 247))
+        window.blit(text_process, (940, 600))
+        pygame.draw.rect(window, gray, (1119, 562, 99, 99), border_radius=5)
+        imgPro = pygame.image.load("assets/process.png").convert()
+        imgPro = pygame.transform.scale(imgPro, (99, 99))
+        window.blit(imgPro, (1119, 562))
         while self.__running.isSet():
             print("reading condition", progress)
             jacoRobot.gripperRelease()
@@ -353,6 +370,13 @@ class Job(threading.Thread):
                     self.__flag.wait()
                     jacoRobot.setPosition2(i, True)
                 print(datetime.now() - start_time)
+                pygame.draw.rect(window, gray, (1119, 562, 99, 99), border_radius=5)
+                imgSuc = pygame.image.load("assets/success.png").convert()
+                imgSuc = pygame.transform.scale(imgSuc, (99, 99))
+                window.blit(imgSuc, (1119, 562))
+                pygame.draw.rect(window, purple, (929, 602, 140, 29), border_radius=5)
+                text_process = font_reg.render("FINISH", True, (242, 242, 247))
+                window.blit(text_process, (940, 600))
                 break
 
     def pause(self):
@@ -504,26 +528,21 @@ if __name__ == '__main__':
                         shoulderLoc = Ah * Shomid[1] ** 2 + Bh * Shomid[1] + Ch
                         hipsLoc = Ah * Hipmid[1] ** 2 + Bh * Hipmid[1] + Ch
 
-                        zRob = curRobotPos[2]
-                        minHead = noseLoc - 150
-                        maxHead = noseLoc + 150
+                        zRob = curRobotPos[2] + 1000
+                        minHead = noseLoc
+                        maxHead = noseLoc
                         zHead = [minHead, maxHead]
                         minChest = hipsLoc
                         maxChest = shoulderLoc
                         zChest = [minChest, maxChest]
 
-                        # print("lokasi hidung ", noseLoc)
-                        # print("lokasi mid shoulder ", shoulderLoc)
-                        # print("lokasi mid hips ", hipsLoc)
 
                         # ===== SSM calculation ======
-                        #Sp = SSM_calculation(VelRnew, vel, Tr, ac, C, Zd, Zr)
-                        Sp = 2000
+                        Sp = SSM_calculation(VelRnew, vel, Tr, ac, C, Zd, Zr)
+                        #Sp = 400
                         disHR = distanceCM / 100
-                        Spmin = 1000
-                        Spmin = abs(vel) + C + Zd + Zr
-                        Spspace = Sp - Spmin
-                        Scol = Spmin + Spspace
+                        #Spmin = 100
+                        Spmin = abs(velHum) + C + Zd + Zr
                         # separation protective condition
                         # if Spmin > disHR:
                         #    cv2.putText(image, 'Mode = STOPPPPPPPPPPP',
@@ -539,7 +558,7 @@ if __name__ == '__main__':
                         velHum = vel * 1000
                         velRob = VelRnew
                         ShodisXY, ShoXYmid = center_pointXY(leftShoulder, rightShoulder)
-                        robotZ = 1000 + curRobotPos[2]
+
 
                         #  right monitoring output
 
@@ -573,7 +592,7 @@ if __name__ == '__main__':
                         Scurrent = eye_dist
                         Scurrent = round(Scurrent, 2)
 
-                # ======= Information Visualization =========
+                        # ======= Information Visualization =========
 
                         # SSM output value
                         pygame.draw.rect(window, gray, (233, 555, 196, 29), border_radius=5)
@@ -595,28 +614,60 @@ if __name__ == '__main__':
                         text_vmaxcmdval = font_reg.render(str(Vr_max_command) + " mm/s", True, (50, 50, 50))
                         window.blit(text_vmaxcmdval, (118, 647))
 
-                # ============== Robot Domain ===============
-                        #+1000 depends on the table height
-                        curRobotPos = round(curRobotPos, 2) + 1000
-                        pygame.draw.rect(window, gray, (855, 119, 196, 29), border_radius=5)
+                        # ============== Robot Domain ===============
+                        # +1000 depends on the table height
+                        curRobotPos[0] = round(curRobotPos[0] + 1000, 1)
+                        curRobotPos[1] = round(curRobotPos[1] + 1000, 1)
+                        curRobotPos[2] = round(curRobotPos[2] + 1000, 1)
+                        pygame.draw.rect(window, gray, (845, 119, 150, 29), border_radius=5)
                         text_xRval = font_reg.render(str(curRobotPos[0]) + " mm", True, (50, 50, 50))
                         window.blit(text_xRval, (855, 119))
 
-                        pygame.draw.rect(window, gray, (855, 156, 196, 29), border_radius=5)
+                        pygame.draw.rect(window, gray, (845, 156, 150, 29), border_radius=5)
                         text_yRval = font_reg.render(str(curRobotPos[1]) + " mm", True, (50, 50, 50))
                         window.blit(text_yRval, (855, 156))
 
-                        pygame.draw.rect(window, gray, (855, 194, 196, 29), border_radius=5)
+                        pygame.draw.rect(window, gray, (845, 194, 150, 29), border_radius=5)
                         text_zRval = font_reg.render(str(curRobotPos[2]) + " mm", True, (50, 50, 50))
-                        window.blit(text_zRval, (118, 194))
+                        window.blit(text_zRval, (855, 194))
 
-                        pygame.draw.rect(window, gray, (1088, 125, 196, 29), border_radius=5)
+                        Vr = round(Vr, 2)
+                        pygame.draw.rect(window, gray, (1088, 125, 165, 29), border_radius=5)
                         text_speedRval = font_reg.render(str(Vr) + " mm/s", True, (50, 50, 50))
                         window.blit(text_speedRval, (1088, 125))
 
-                        pygame.draw.rect(window, gray, (1045, 156, 196, 29), border_radius=5)
+                        VelRnew = round(VelRnew, 2)
+                        pygame.draw.rect(window, gray, (1045, 160, 165, 29), border_radius=5)
                         text_speedRval = font_reg.render(str(VelRnew) + " mm/s", True, (50, 50, 50))
                         window.blit(text_speedRval, (1045, 156))
+
+                    #=== Human domain
+                        zHead[0] = round(zHead[0] * 10, 2)
+                        pygame.draw.rect(window, gray, (929, 358, 165, 29), border_radius=5)
+                        text_minHead = font_reg.render(str(zHead[0]) + " mm", True, (50, 50, 50))
+                        window.blit(text_minHead, (929, 358))
+
+                        zHead[1] = round(zHead[1] * 10, 2)
+                        pygame.draw.rect(window, gray, (929, 391, 165, 29), border_radius=5)
+                        text_maxHead = font_reg.render(str(zHead[1]) + " mm", True, (50, 50, 50))
+                        window.blit(text_minHead, (929, 391))
+
+                        zChest[0] = round(zChest[0] * 10, 2)
+                        pygame.draw.rect(window, gray, (935, 475, 165, 29), border_radius=5)
+                        text_minHead = font_reg.render(str(zChest[0]) + " mm", True, (50, 50, 50))
+                        window.blit(text_minHead, (935, 475))
+
+                        zChest[1] = round(zChest[1] * 10, 2)
+                        pygame.draw.rect(window, gray, (935, 508, 165, 29), border_radius=5)
+                        text_minHead = font_reg.render(str(zChest[1]) + " mm", True, (50, 50, 50))
+                        window.blit(text_minHead, (935, 508))
+
+                        velHum = round(velHum, 2)
+                        pygame.draw.rect(window, gray, (1031, 329, 165, 29), border_radius=5)
+                        text_velHum = font_reg.render(str(velHum) + " mm/s", True, (50, 50, 50))
+                        window.blit(text_velHum, (1031, 329))
+
+
 
                         # logical SSM send robot
                         if Scurrent < Spmin:
@@ -624,18 +675,18 @@ if __name__ == '__main__':
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
-                            text_coll = font_reg.render("Stop", True, (242, 242, 247))
-                            window.blit(text_coll, (467, 555))
+                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            text_stop = font_reg.render("Stop", True, (242, 242, 247))
+                            window.blit(text_stop, (467, 555))
                             pygame.draw.rect(window, red, (460, 588, 166, 81), border_radius=5)
 
                             jacoRobot.message("Robot stop")
                             t.sleep(0.5)
-                        elif Spmin <= Scurrent and Scol > Scurrent:
+                        elif Spmin <= Scurrent and Sp > Scurrent:
                             server.resume()
                             print("Robot working on collaboration mode")
                             mode_collab = 3
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
                             text_coll = font_reg.render("Collaboration", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, blue, (460, 588, 166, 81), border_radius=5)
@@ -658,7 +709,7 @@ if __name__ == '__main__':
                                     print("Succes send speed Vr Command")
                             jacoRobot.message("Collaboration speed")
                             t.sleep(0.5)
-                        elif Scol <= Scurrent and Sp + 500 >= Scurrent:
+                        elif Sp <= Scurrent and Sp + 500 >= Scurrent:
                             server.resume()
                             print("Robot speed reduction")
                             mode_collab = 2
@@ -668,9 +719,9 @@ if __name__ == '__main__':
                             Vr = 1000
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Mid")
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
-                            text_coll = font_reg.render("Reduce Speed", True, (242, 242, 247))
-                            window.blit(text_coll, (467, 555))
+                            pygame.draw.rect(window, purple, (467, 555, 160, 29), border_radius=5)
+                            text_reduce = font_reg.render("Reduce Speed", True, (242, 242, 247))
+                            window.blit(text_reduce, (467, 555))
                             pygame.draw.rect(window, yellow, (460, 588, 166, 81), border_radius=5)
                             jacoRobot.message("Robot speed reduction")
                             t.sleep(0.5)
@@ -681,9 +732,9 @@ if __name__ == '__main__':
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Full Speed")
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
-                            text_coll = font_reg.render("Full Speed", True, (242, 242, 247))
-                            window.blit(text_coll, (467, 555))
+                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
+                            text_freespeed = font_reg.render("Full Speed", True, (242, 242, 247))
+                            window.blit(text_freespeed, (467, 555))
                             pygame.draw.rect(window, green, (460, 588, 166, 81), border_radius=5)
                             jacoRobot.message("Robot free speed")
                             t.sleep(0.5)
@@ -698,7 +749,7 @@ if __name__ == '__main__':
                             print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
                             text_coll = font_reg.render("Stop", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, red, (460, 588, 166, 81), border_radius=5)
@@ -713,7 +764,7 @@ if __name__ == '__main__':
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
                             print("Succes send speed Vr Full Speed")
-                            pygame.draw.rect(window, purple, (445, 555, 196, 29), border_radius=5)
+                            pygame.draw.rect(window, purple, (467, 555, 150, 29), border_radius=5)
                             text_coll = font_reg.render("Full Speed", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, green, (460, 588, 166, 81), border_radius=5)

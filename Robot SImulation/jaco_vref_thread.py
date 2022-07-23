@@ -12,7 +12,7 @@ import threading
 # Program ini akan terus melalukan looping pick & place
 # dan tidak terpengaruh dengan main program (pose detection)
 def thread_robotMovement():
-
+    print("Belajar coding multithread")
 # ====================================================
 
 
