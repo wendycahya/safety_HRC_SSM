@@ -644,7 +644,7 @@ if __name__ == '__main__':
                                     print("Succes send speed Vr Command")
                             jacoRobot.message("Collaboration speed")
                             t.sleep(0.5)
-                        elif Sp <= Scurrent and Sp + 500 >= Scurrent:
+                        elif Sp <= Scurrent and Sp + 150 >= Scurrent:
                             server.resume()
                             print("Robot speed reduction")
                             mode_collab = 2
