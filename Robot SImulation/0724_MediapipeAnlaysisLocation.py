@@ -325,7 +325,7 @@ DPos18 = [550, 40, 50, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 DObjPlace =[DPos11, DPos12, DPos13, DPos14, DPos15, DPos16, DPos17, DPos18, DPlace]
 
-progress = [1, 1, 1, 0]
+progress = [0, 0, 0, 0]
 finish = [1, 1, 1, 1]
 start_time = datetime.now()
 
@@ -428,7 +428,7 @@ if __name__ == '__main__':
 
     detector = FaceMeshDetector(maxFaces=1)
     detectFace = FaceDetector()
-    print("Nilai S Current adalah ", Scurrent)
+    #print("Nilai S Current adalah ", Scurrent)
     # ======================================================
     # masukkan program utama disini (looping program)
     with open(write_file, "wt", encoding="utf-8") as output:
@@ -447,15 +447,15 @@ if __name__ == '__main__':
 
             # === Robot analysis Velocity ===
             curRobotPos = jacoRobot.readPosition()
-            print("robot position ", curRobotPos[0], curRobotPos[1], curRobotPos[2])
+            #print("robot position ", curRobotPos[0], curRobotPos[1], curRobotPos[2])
             xRob = round(curRobotPos[0], 2)
             yRob = round(curRobotPos[1], 2)
             zRob = round(curRobotPos[2], 2)
             XnRob = [xRob, yRob, zRob]
-            print("Robot Position X Y Z: ", xRob, yRob, zRob)
-            print("Robot Last Position X Y Z: ", XnRob_last[0], XnRob_last[1], XnRob_last[2])
+            #print("Robot Position X Y Z: ", xRob, yRob, zRob)
+            #print("Robot Last Position X Y Z: ", XnRob_last[0], XnRob_last[1], XnRob_last[2])
             velR = velXYZ(XnRob, XnRob_last, ts)
-            print("Robot velocity X Y Z: ", velR[0], velR[1], velR[2])
+            #print("Robot velocity X Y Z: ", velR[0], velR[1], velR[2])
             # velR[0] = round(velR[0], 2)
             # velR[1] = round(velR[1], 2)
             # velR[2] = round(velR[2], 2)
@@ -463,12 +463,12 @@ if __name__ == '__main__':
             VelRnew = abs(VelRnew)
             if VelRnew > RobotVrmax:
                 VelRnew = RobotVrmax
-            print("Robot average velocity", VelRnew)
+            #print("Robot average velocity", VelRnew)
             SpStatis = SSM_calculation(Vrinitial, Vh, Tr, ac, C, Zd, Zr)
-            print("SSM Statis", SpStatis)
+            #print("SSM Statis", SpStatis)
             # ===== SSM calculation ======
             Sp = SSM_calculation(VelRnew, Vh, Tr, ac, C, Zd, Zr)
-            print("SSM Dynamic", Sp)
+            #print("SSM Dynamic", Sp)
 
             if faces:
                 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
@@ -610,14 +610,14 @@ if __name__ == '__main__':
                                    color=(255, 255, 0), thickness=10)
 
 
-                        print("Nilai S Current adalah ", Scurrent)
+                        #print("Nilai S Current adalah ", Scurrent)
                         Scurrent = eye_dist
                         Scurrent = round(Scurrent, 2)
 
                         # logical SSM send robot
                         if Scurrent < SpminVal:
                             server.pause()
-                            print("Robot harus berhenti", vrstop)
+                            #print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
@@ -629,7 +629,7 @@ if __name__ == '__main__':
                             t.sleep(0.5)
                         elif SpminVal <= Scurrent and Sp > Scurrent:
                             server.resume()
-                            print("Robot working on collaboration mode")
+                            #print("Robot working on collaboration mode")
                             mode_collab = 3
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Collaboration", True, (242, 242, 247))
@@ -637,25 +637,25 @@ if __name__ == '__main__':
                             pygame.draw.rect(window, blue, (460, 588, 166, 81), border_radius=5)
 
                             if zHead[0] < zRob and zHead[1] >= zRob:
-                                print("Velocity limitation on head area: ", vrface)
+                                #print("Velocity limitation on head area: ", vrface)
                                 pygame.draw.rect(window, gray, (1134, 442, 90, 90), border_radius=5)
                                 imgHead = pygame.image.load("assets/head.png").convert()
                                 imgHead = pygame.transform.scale(imgHead, (90, 90))
                                 window.blit(imgHead, (1134, 442))
                                 Vr = vrface
                                 jacoRobot.setSpeed(Vr, vrot)
-                                print("Succes send speed VrFace")
+                                #print("Succes send speed VrFace")
                                 t.sleep(0.5)
 
                             elif zChest[0] < zRob and zChest[1] >= zRob:
-                                print("Velocity limitation on chest: ", vrchest)
+                                #print("Velocity limitation on chest: ", vrchest)
                                 pygame.draw.rect(window, gray, (1134, 442, 90, 90), border_radius=5)
                                 imgHead = pygame.image.load("assets/chest.png").convert()
                                 imgHead = pygame.transform.scale(imgHead, (90, 90))
                                 window.blit(imgHead, (1134, 442))
                                 Vr = vrchest
                                 jacoRobot.setSpeed(Vr, vrot)
-                                print("Succes send speed VrChest")
+                                #print("Succes send speed VrChest")
                                 t.sleep(0.5)
                             else:
                                 Vr = Vr_max_command
@@ -666,16 +666,16 @@ if __name__ == '__main__':
                                     imgHead = pygame.image.load("assets/safe.png").convert()
                                     imgHead = pygame.transform.scale(imgHead, (90, 90))
                                     window.blit(imgHead, (1134, 442))
-                                    print("Succes send speed Vr Command")
+                                    #print("Succes send speed Vr Command")
                                     t.sleep(0.5)
                             jacoRobot.message("Collaboration speed")
                             t.sleep(0.5)
                         elif Sp <= Scurrent and Sp + 150 >= Scurrent:
                             server.resume()
-                            print("Robot speed reduction")
+                            #print("Robot speed reduction")
                             mode_collab = 2
                             # calculate the Vmax allowable
-                            print("Vmax allowable in this workspace: ", Vr_max_command)
+                            #print("Vmax allowable in this workspace: ", Vr_max_command)
                             # Vr = Vr_max_command
                             Vr = 100
                             jacoRobot.setSpeed(Vr, vrot)
@@ -688,11 +688,11 @@ if __name__ == '__main__':
                             t.sleep(0.5)
                         else:
                             server.resume()
-                            print("Robot bekerja maximal")
+                            #print("Robot bekerja maximal")
                             mode_collab = 1
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
-                            print("Succes send speed Vr Full Speed")
+                            #print("Succes send speed Vr Full Speed")
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_freespeed = font_reg.render("Full Speed", True, (242, 242, 247))
                             window.blit(text_freespeed, (467, 555))
@@ -707,7 +707,7 @@ if __name__ == '__main__':
                     except:
                         if Scurrent < SpminVal:
                             server.pause()
-                            print("Robot harus berhenti", vrstop)
+                            #print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
@@ -715,16 +715,16 @@ if __name__ == '__main__':
                             window.blit(text_coll, (467, 555))
                             pygame.draw.rect(window, red, (460, 588, 166, 81), border_radius=5)
                             jacoRobot.message("Robot stop")
-                            print("Be careful! Sensor not detected")
+                            #print("Be careful! Sensor not detected")
                             jacoRobot.message("Your position is too close. Be careful sensor not detected")
                             t.sleep(0.5)
                         elif Scurrent > Sp:
                             server.resume()
-                            print("Robot bekerja maximal")
+                            #print("Robot bekerja maximal")
                             mode_collab = 1
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
-                            print("Succes send speed Vr Full Speed")
+                            #print("Succes send speed Vr Full Speed")
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Full Speed", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
@@ -747,7 +747,7 @@ if __name__ == '__main__':
             # ===== research documentation =====
             interval = interval + 1
             output.write(str(interval) + ',' + str(Scurrent) + ',' + str(Sp) + ',' + str(mode_collab) + '\n')
-            print("Scurrent update ", Scurrent)
+            #print("Scurrent update ", Scurrent)
 
             # ======= Information Visualization =========
 
