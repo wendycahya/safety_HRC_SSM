@@ -245,7 +245,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 #information
-write_file = "test 1.csv"
+write_file = "Saurav 160.csv"
 mode_collab = 0
 
 # === coppelia connect
@@ -609,7 +609,11 @@ if __name__ == '__main__':
                         cv2.circle(img, tuple(np.multiply([midCoor[0], midCoor[1]], [640, 480]).astype(int)), radius=5,
                                    color=(255, 255, 0), thickness=10)
 
+                        cv2.circle(img, tuple(np.multiply([xyzNose[0], xyzNose[1]], [640, 480]).astype(int)), radius=5,
+                                   color=(255, 255, 0), thickness=10)
 
+                        nilai_nose = tuple(np.multiply([xyzNose[0], xyzNose[1]], [640, 480]).astype(int))
+                        print("Tipe data analysis ", nilai_nose[0], nilai_nose[1])
                         #print("Nilai S Current adalah ", Scurrent)
                         Scurrent = eye_dist
                         Scurrent = round(Scurrent, 2)
@@ -746,7 +750,6 @@ if __name__ == '__main__':
             window.blit(imgHead, (1134, 442))
             # ===== research documentation =====
             interval = interval + 1
-            output.write(str(interval) + ',' + str(Scurrent) + ',' + str(Sp) + ',' + str(mode_collab) + '\n')
             #print("Scurrent update ", Scurrent)
 
             # ======= Information Visualization =========
@@ -836,7 +839,7 @@ if __name__ == '__main__':
             frame = pygame.transform.flip(frame, True, False)
 
             window.blit(frame, (18, 18))
-
+            output.write(str(interval) + ',' + str(140) + ',' + str(nilai_nose[0]) + ',' + str(nilai_nose[1]) + '\n')
             # Update Display
             pygame.display.update()
             # Set FPS
