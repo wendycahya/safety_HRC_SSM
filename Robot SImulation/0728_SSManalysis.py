@@ -253,8 +253,13 @@ midshoulderRAW = 0
 midHipsRAW = 0
 
 #information
-write_file = "newdatasecondsit_data_Saurav.csv"
+write_file = "SSMdata_Analysis.csv"
 mode_collab = 0
+
+#SSM original data
+VrOriSSM = 0
+mode_SSMori = 0
+
 
 # === coppelia connect
 mSim = CoppeliaSim()
@@ -652,9 +657,12 @@ if __name__ == '__main__':
                         # logical SSM send robot
                         if Scurrent < SpminVal:
                             server.pause()
-                            #print("Robot harus berhenti", vrstop)
+                            print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
+                            #mode SSM ori stop = 3
+                            mode_SSMori = 3
+                            VrOriSSM = 0
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_stop = font_reg.render("Stop", True, (242, 242, 247))
                             window.blit(text_stop, (467, 555))
@@ -666,6 +674,11 @@ if __name__ == '__main__':
                             server.resume()
                             print("Robot working on collaboration mode")
                             mode_collab = 3
+
+                            #mode SSM ori stop = 3
+                            mode_SSMori = 2
+                            VrOriSSM = 0
+
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Collaboration", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
@@ -720,6 +733,11 @@ if __name__ == '__main__':
                             # Vr = Vr_max_command
                             Vr = 100
                             jacoRobot.setSpeed(Vr, vrot)
+
+                            #mode SSM ori reduce speed = 2
+                            mode_SSMori = 2
+                            VrOriSSM = 100
+
                             print("Succes send speed Vr Mid")
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_reduce = font_reg.render("Reduce Speed", True, (242, 242, 247))
@@ -733,6 +751,10 @@ if __name__ == '__main__':
                             mode_collab = 1
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
+
+                            #mode SSM ori full speed = 1
+                            mode_SSMori = 1
+                            VrOriSSM = vrmax
                             #print("Succes send speed Vr Full Speed")
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_freespeed = font_reg.render("Full Speed", True, (242, 242, 247))
@@ -752,6 +774,11 @@ if __name__ == '__main__':
                             #print("Robot harus berhenti", vrstop)
                             mode_collab = 4
                             Vr = 0
+
+                            #mode SSM ori stop speed = 3
+                            mode_SSMori = 3
+                            VrOriSSM = 0
+
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Stop", True, (242, 242, 247))
                             window.blit(text_coll, (467, 555))
@@ -766,6 +793,10 @@ if __name__ == '__main__':
                             mode_collab = 1
                             Vr = vrmax
                             jacoRobot.setSpeed(Vr, vrot)
+
+                            #mode SSM ori full speed = 1
+                            mode_SSMori = 1
+                            VrOriSSM = 100
                             #print("Succes send speed Vr Full Speed")
                             pygame.draw.rect(window, purple, (467, 555, 165, 29), border_radius=5)
                             text_coll = font_reg.render("Full Speed", True, (242, 242, 247))
@@ -873,7 +904,7 @@ if __name__ == '__main__':
             # ===== research documentation =====
             interval = interval + 1
             # nilai calibrasi data raw real hip, real shoulder, real nose, pixel hip, pixel shoulder, pixel nose
-            #output.write(str(interval) + ',' + str(140) + ',' + str(120) + ',' + str(140) + ',' + str(noseRAW) + ',' + str(midshoulderRAW) + ',' + str(midHipsRAW) + '\n')
+            output.write(str(interval) + ',' + str(Scurrent) + ',' + str(VrOriSSM) + ',' + str(Vr) + ',' + str(mode_SSMori) + ',' + str(mode_collab) + '\n')
             print("SUCCESS RECORD!!!")
             # Update Display
             pygame.display.update()
