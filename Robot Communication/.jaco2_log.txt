@@ -40049,3 +40049,7 @@
 03-08-2022 02:51:15 DEBUG: Actuator: 3 position is: 268.957794 with target: 269.863098 mod 360: 268.000000
 03-08-2022 02:51:15 DEBUG: Actuator: 4 position is: 294.980835 with target: 0.000000 mod 360: 294.000000
 03-08-2022 02:51:15 DEBUG: Actuator: 5 position is: 175.995636 with target: 174.179169 mod 360: 175.000000
+03-08-2022 05:32:14 DEBUG: Initializing RS-485 Communication...
+03-08-2022 05:32:14 ERROR: B while Initializing
+03-08-2022 05:32:14 INFO: Connection successful
+03-08-2022 05:32:14 DEBUG: Initializing position control mode...
