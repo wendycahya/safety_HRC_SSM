@@ -1,70 +1,38 @@
-""" An example script moving the arm to 4 targets in joint space
-using position control, _not_ force control. """
-
-import sys
-import numpy as np
-import time
-import traceback
-
 import abr_jaco2
+from abr_control.controllers import OSC
+import numpy as np
 
-# initialize our robot config
-robot_config = abr_jaco2.Config(
-    use_cython=True)
-
-# create our interface for the jaco2
+robot_config = abr_jaco2.Config()
 interface = abr_jaco2.Interface(robot_config)
+ctrlr = OSC(robot_config)
+# instantiate things to avoid creating 200ms delay in main loop
+zeros = np.zeros(robot_config.N_LINKS)
+ctrlr.generate(q=zeros, dq=zeros, target=np.zeros(3))
+# run once outside main loop as well, returns the cartesian
+# coordinates of the end effector
+robot_config.Tx('EE', q=zeros)
 
-# in radians between 0-2Pi
-target_joint_angles = np.array([
-    [1.98, 1.86, 2.11, 4.71, 0.0, 3.0]], dtype='float32')
-
-# connect to the jaco and move to it's start rest position
 interface.connect()
 interface.init_position_mode()
-interface.send_target_angles(robot_config.START_ANGLES)
+interface.send_target_angles(robot_config.INIT_TORQUE_POSITION)
 
-q_track = []
-target_track = []
+target_xyz = [0.57, 0.03, 0.87]  # (x, y, z) target (metres)
+interface.init_force_mode()
 
-try:
-    for ii in range(0, len(target_joint_angles)):
+while True:
+    # returns a dictionary with q, dq
+    feedback = interface.get_feedback()
+    # ee position
+    xyz = robot_config.Tx('EE', q = feedback, target_pos = target_xyz)
+    u = ctrlr.generate(feedback['q'], feedback['dq'], target_xyz)
+    interface.send_forces(u, dtype='float32')
 
-        # send target angles to the arm
-        interface.send_target_angles(target_joint_angles[ii])
-        # the arm will move to the target before returning from the function
-        feedback = interface.get_feedback()
+    error = np.sqrt(np.sum((xyz - TARGET_XYZ[ii])**2))
 
-        # track data
-        q_track.append(np.copy(feedback['q']))
-        target_track.append(np.copy(target_joint_angles[ii]))
+    if error < 0.02:
+        break
 
-        # wait for a second before moving to the next target
-        time.sleep(1)
-
-except:
-    print(traceback.format_exc())
-
-finally:
-    # close the connection to the arm
-    interface.send_target_angles(robot_config.START_ANGLES)
-    interface.disconnect()
-
-    q_track = np.array(q_track)
-    target_track = np.array(target_track)
-    import matplotlib
-    matplotlib.use("TKAgg")
-    import matplotlib.pyplot as plt
-    plt.figure()
-    for ii in range(0, 5):
-        plt.subplot(6, 1, ii + 1)
-        plt.title('Target vs. Actual Joint Angles')
-        plt.xlabel('Target Position')
-        plt.ylabel('Joint Position (rad)')
-        plt.plot(np.arange(0, len(q_track[:, ii])), q_track[:, ii],
-                 label="Actual")
-        plt.plot(np.arange(0, len(target_track[:, ii])), target_track[:, ii],
-                 '--', label="Target")
-        plt.legend()
-    plt.show()
-    sys.exit()
+# switch back to position mode to move home and disconnect
+interface.init_position_mode()
+interface.send_target_angles(robot_config.INIT_TORQUE_POSITION)
+interface.disconnect()
