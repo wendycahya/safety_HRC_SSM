@@ -49,7 +49,17 @@ class Config(BaseConfig):
 
         # position to move to before switching to torque mode
         self.START_ANGLES = np.array(
-            [0.0, 2.79, 2.62, 4.71, 0.0, 3.04], dtype="float32"
+            [3.14, 0.0, 0.0, 3.14, 0.0, 1.57], dtype="float32"
+        )
+
+        # position to move to before switching to torque mode
+        self.JACO_HOME = np.array(
+            [3.14, 4.18879, 0, 1.0472, 1.5708, 1.5708], dtype="float32"
+        )
+
+        # position to move to before switching to torque mode
+        self.JACO_HORIZONTAL_POSE = np.array(
+            [3.14, 3.14, 3.14, 3.14, 3.14, 3.14], dtype="float32"
         )
 
         # create inertia matrices for each link of the Kinova Jaco^2

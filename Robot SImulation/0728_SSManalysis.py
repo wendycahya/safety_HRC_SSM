@@ -338,7 +338,7 @@ DPos18 = [550, 40, 50, 180, 0, 0]
 DPlace = [550, 40, 0, 180, 0, 0]
 DObjPlace =[DPos11, DPos12, DPos13, DPos14, DPos15, DPos16, DPos17, DPos18, DPlace]
 
-progress = [1, 1, 0, 0]
+progress = [0, 0, 0, 0]
 finish = [1, 1, 1, 1]
 start_time = datetime.now()
 
@@ -904,7 +904,7 @@ if __name__ == '__main__':
             # ===== research documentation =====
             interval = interval + 1
             # nilai calibrasi data raw real hip, real shoulder, real nose, pixel hip, pixel shoulder, pixel nose
-            output.write(str(interval) + ',' + str(Scurrent) + ',' + str(VrOriSSM) + ',' + str(Vr) + ',' + str(mode_SSMori) + ',' + str(mode_collab) + '\n')
+            # output.write(str(interval) + ',' + str(Scurrent) + ',' + str(VrOriSSM) + ',' + str(Vr) + ',' + str(mode_SSMori) + ',' + str(mode_collab) + '\n')
             print("SUCCESS RECORD!!!")
             # Update Display
             pygame.display.update()
