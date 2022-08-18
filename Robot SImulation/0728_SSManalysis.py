@@ -510,7 +510,7 @@ if __name__ == '__main__':
                     results = pose.process(img)
                     # Recolor back to BGR
                     img.flags.writeable = True
-                    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+                    #img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
                     # Extract landmarks
                     try:
