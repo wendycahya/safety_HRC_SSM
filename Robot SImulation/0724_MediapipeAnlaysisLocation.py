@@ -393,6 +393,7 @@ class Job(threading.Thread):
                 finish_task = datetime.now() - start_time
                 finish_task = str(finish_task)
                 print(datetime.now() - start_time)
+
                 pygame.draw.rect(window, gray, (1119, 562, 99, 99), border_radius=5)
                 imgSuc = pygame.image.load("assets/success.png").convert()
                 imgSuc = pygame.transform.scale(imgSuc, (99, 99))
