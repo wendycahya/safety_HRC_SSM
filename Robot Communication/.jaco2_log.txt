@@ -1,0 +1,49 @@
+04-08-2022 10:41:59 DEBUG: Initializing RS-485 Communication...
+04-08-2022 10:41:59 INFO: RS485 initialization completed
+04-08-2022 10:41:59 INFO: Activating Jaco2...
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 INFO: Connection successful
+04-08-2022 10:41:59 DEBUG: Initializing position control mode...
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 0, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 1, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 2, Response: 1
+04-08-2022 10:41:59 DEBUG: Data for joint 4 not updated, checking again...
+04-08-2022 10:41:59 DEBUG: Data for joint 5 not updated, checking again...
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 3, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 4, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 5, Response: 1
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Joint feedback received for unknown joint
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 0, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 1, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 2, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 3, Response: 1
+04-08-2022 10:41:59 INFO: Position control mode activated
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 4, Response: 1
+04-08-2022 10:41:59 DEBUG: Switch control mode to Position control True for servo 5, Response: 1
+04-08-2022 10:41:59 DEBUG: Actuator: 0 position is: 288.548035 with target: 179.908752 mod 360: 288.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 1 position is: 163.500000 with target: 179.908752 mod 360: 163.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 2 position is: 43.691696 with target: 179.908752 mod 360: 43.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 3 position is: 267.620728 with target: 179.908752 mod 360: 267.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 4 position is: 261.945862 with target: 179.908752 mod 360: 261.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 5 position is: -72.063606 with target: 179.908752 mod 360: 288.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 0 position is: 239.764740 with target: 179.908752 mod 360: 239.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 1 position is: 179.277054 with target: 179.908752 mod 360: 179.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 2 position is: 92.127243 with target: 179.908752 mod 360: 92.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 3 position is: 218.811081 with target: 179.908752 mod 360: 218.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 4 position is: 212.859512 with target: 179.908752 mod 360: 212.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 5 position is: -120.901665 with target: 179.908752 mod 360: 240.000000
+04-08-2022 10:41:59 DEBUG: Data for joint 5 not updated, checking again...
+04-08-2022 10:41:59 DEBUG: Actuator: 0 position is: 189.780853 with target: 179.908752 mod 360: 189.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 1 position is: 179.272751 with target: 179.908752 mod 360: 179.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 2 position is: 142.263184 with target: 179.908752 mod 360: 142.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 3 position is: 181.086929 with target: 179.908752 mod 360: 181.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 4 position is: 181.067749 with target: 179.908752 mod 360: 181.000000
+04-08-2022 10:41:59 DEBUG: Actuator: 5 position is: -170.854935 with target: 179.908752 mod 360: 190.000000
+04-08-2022 10:41:59 INFO: Connection closed
+------------------------------------------------------
