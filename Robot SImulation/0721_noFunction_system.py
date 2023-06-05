@@ -83,10 +83,10 @@ Vr_max_command = 0
 
 #Robot Velocity
 
-vrchest = 230
-vrface = 60
+vrchest = 400
+vrface = 100
 vrstop = 0
-vrmax = 2000
+vrmax = 1500
 vrot = 90
 velRob = 0
 robotZ = 0
