@@ -103,8 +103,9 @@ def update_plot():
     ax.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataD, 'b-')
     ax2.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataVR, 'r')
     plt.axis('on')  # Turn off axis labels and ticks
-    plt.xlabel("Time")
-    plt.ylabel("Distance (mm)")
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Distance (mm)")
+    ax2.set_ylabel("Speed (mm/s)")
     plt.tight_layout()  # Adjust the plot to remove any padding
     plt.savefig('temp_plot.png')  # Save the plot as an image
 
