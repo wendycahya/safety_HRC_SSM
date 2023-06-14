@@ -100,7 +100,7 @@ dataVR = []
 # Function to update the plot
 def update_plot():
     ax.clear()
-    ax.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataD, 'b-')
+    ax.plot(dataD, 'b-')
     ax2.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataVR, 'r')
     plt.axis('on')  # Turn off axis labels and ticks
     ax.set_xlabel("Time")
