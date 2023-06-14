@@ -101,7 +101,7 @@ dataVR = []
 def update_plot():
     ax.clear()
     ax.plot(dataD, 'b-')
-    ax2.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataVR, 'r')
+    ax2.plot(dataVR, 'r')
     plt.axis('on')  # Turn off axis labels and ticks
     ax.set_xlabel("Time")
     ax.set_ylabel("Distance (mm)")
