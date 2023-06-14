@@ -101,7 +101,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
         fps, imgCap = fpsReader.update(img, pos=(20, 20), color=(0, 255, 0), scale=2, thickness=2)
 
         if faces:
-    #skeleton detection
+        #skeleton detection
             face = faces[0]
             print(faces[0])
             pointLeft = face[145]
