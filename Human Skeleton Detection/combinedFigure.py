@@ -7,7 +7,7 @@ from cvzone.FaceMeshModule import FaceMeshDetector
 from datetime import datetime
 import csv
 import math
-import time as t
+import datetime as dt
 
 Sp, Spfull, SpminVal, SpSafeVal, SpPFLVal = 0, 0, 0, 0, 0
 def SSM_calculation(Vr, Vh, Tr, Ts, ac, C, Zd, Zr):
@@ -92,14 +92,16 @@ detector = FaceMeshDetector(maxFaces=1)
 
 # Create a figure and axes for live plotting
 fig, ax = plt.subplots()
-
+ax2 = ax.twinx()
 # Create an empty list to store data for plotting
-data = []
+dataD = []
+dataVR = []
 
 # Function to update the plot
 def update_plot():
     ax.clear()
-    ax.plot(data)
+    ax.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataD, 'b-')
+    ax2.plot(dt.datetime.now().strftime('%H:%M:%S.%f'), dataVR, 'r')
     plt.axis('on')  # Turn off axis labels and ticks
     plt.xlabel("Time")
     plt.ylabel("Distance (mm)")
@@ -200,7 +202,8 @@ while True:
     # Replace this with your actual variable that you want to plot
     #import random
     #new_data = random.randint(0, 100)
-    data.append(d)
+    dataD.append(d)
+    dataVR.append(Vr)
 
     # Update the plot
     update_plot()
