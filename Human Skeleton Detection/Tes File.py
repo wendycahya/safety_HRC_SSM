@@ -1,59 +1,60 @@
-import cvzone
-from cvzone.FaceMeshModule import FaceMeshDetector
 import cv2
-from datetime import datetime
-import csv
+import matplotlib.pyplot as plt
+import numpy as np
 
-
-start_time = datetime.now()
-start = datetime.now()
-milliseconds = 0
-write_file = "TR-"+str(start)+"-SSMNewDemo.csv"
-d =0
-
-#Device connection
-fpsReader = cvzone.FPS()
+# Initialize webcam
 cap = cv2.VideoCapture(0)
-detector = FaceMeshDetector(maxFaces=1)
 
-with open(write_file, "wt", encoding="utf-8") as output:
-    #Record data csv opening
-    while True:
-    # Detect human skeleton
-        success, img = cap.read()
-        imgMesh, faces = detector.findFaceMesh(img, draw=False)
-        fps, imgCap = fpsReader.update(img, pos=(20, 20), color=(0, 255, 0), scale=2, thickness=2)
+# Create a figure and axes for live plotting
+fig, ax = plt.subplots()
 
-        if faces:
-    #skeleton detection
-            face = faces[0]
-            print(faces[0])
-            pointLeft = face[145]
-            pointRight = face[374]
-            cv2.line(imgMesh, pointLeft, pointRight, (0, 200, 0), 3)
-            cv2.circle(imgMesh, pointLeft, 5, (255, 0, 255), cv2.FILLED)
-            cv2.circle(imgMesh, pointRight, 5, (255, 0, 255), cv2.FILLED)
-            w, _ = detector.findDistance(pointLeft, pointRight)
-            W = 6.3  # default real width eyes distance
-            #Finding the focal length
+# Create an empty list to store data for plotting
+data = []
 
-            #d = 60  #distance human and camera
-            #f = (w*d) / W
-            #print(f)
+# Function to update the plot
+def update_plot():
+    ax.clear()
+    ax.plot(data)
+    plt.axis('on')  # Turn off axis labels and ticks
+    plt.xlabel("Time")
+    plt.tight_layout()  # Adjust the plot to remove any padding
+    plt.savefig('temp_plot.png')  # Save the plot as an image
 
-            #finding distance
-            f = 714 #finding the average for focal length
-            d = ((W*f) / w) * 10
-            print(d)
-            d = round(d, 3)
-            cvzone.putTextRect(img, f'Depth: {d} mm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
-            start_time = datetime.now()
-            milliseconds = start_time.microsecond // 1000
+# Create windows for video stream and plot
+cv2.namedWindow('Video Stream')
+cv2.namedWindow('Data Analysis')
 
-        #output.write(str(start_time.strftime("%H:%M:%S")) + ',' + str(milliseconds) + ',' + str(d) + '\n')
-        cv2.imshow("Image", img)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+# Main loop
+while True:
+    # Read video frame from webcam
+    ret, frame = cap.read()
 
-    cap.release()
-    cv2.destroyAllWindows()
+    # Simulate data generation (replace this with your own data source)
+    # Here, we generate random data and append it to the list
+    # Replace this with your actual variable that you want to plot
+    import random
+    new_data = random.randint(0, 100)
+    data.append(new_data)
+
+    # Update the plot
+    update_plot()
+
+    # Load the saved plot image
+    plot_img = cv2.imread('temp_plot.png', cv2.IMREAD_UNCHANGED)
+
+    # Resize the plot image to match the video frame size
+    plot_img = cv2.resize(plot_img, (frame.shape[1], frame.shape[0]))
+
+    # Display the video frame in the 'Video Stream' window
+    cv2.imshow('Video Stream', frame)
+
+    # Display the plot in the 'Live Plot' window
+    cv2.imshow('Live Plot', plot_img[:, :, :3])
+
+    # Check for 'q' key press to exit the loop
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the webcam and close all windows
+cap.release()
+cv2.destroyAllWindows()

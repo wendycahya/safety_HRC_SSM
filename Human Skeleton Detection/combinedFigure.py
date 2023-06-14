@@ -1,12 +1,13 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import argparse
 import cv2
+import matplotlib.pyplot as plt
+import numpy as np
 
 import cvzone
 from cvzone.FaceMeshModule import FaceMeshDetector
 from datetime import datetime
 import csv
+import math
+import time as t
 
 Sp, Spfull, SpminVal, SpSafeVal, SpPFLVal = 0, 0, 0, 0, 0
 def SSM_calculation(Vr, Vh, Tr, Ts, ac, C, Zd, Zr):
@@ -83,43 +84,39 @@ SpminVal = Spmin(C_SSM, Zd, Zr)
 SpPFLVal = SpPFL(Vr_PFL, velHum_Ori, Tr, Ts, ac, C_SSM, Zd, Zr)
 SpSafeVal = SpSafe(Vr_PFL, Ts, ac, C_SSM, Zd, Zr)
 
-start_time = datetime.now()
-start = datetime.now()
-milliseconds = 0
-d = 0
-
+# Initialize webcam
 #Device connection
 fpsReader = cvzone.FPS()
 cap = cv2.VideoCapture(0)
 detector = FaceMeshDetector(maxFaces=1)
 
-bins = 100
-# Initialize plot.
+# Create a figure and axes for live plotting
 fig, ax = plt.subplots()
-par = ax.twinx()
 
-ax.set_title('Collaborative Workspace Analysis')
-ax.set_xlabel('time')
-ax.set_ylabel('distance(mm)')
-par.set_ylabel('speed (mm/s)')
-# Initialize plot line object(s). Turn on interactive plotting and show plot.
-lw = 3
-alpha = 0.5
-lineR, = ax.plot(np.arange(bins), np.zeros((bins,)), c='r', lw=lw, alpha=alpha, label='Red')
-lineG, = par.plot(np.arange(bins), np.zeros((bins,)), c='g', lw=lw, alpha=alpha, label='Green')
+# Create an empty list to store data for plotting
+data = []
 
-ax.set_xlim(0, bins-1)
-ax.set_ylim(0, 3000)
-par.set_ylim(0, 2000)
-ax.legend()
-plt.ion()
-plt.show()
+# Function to update the plot
+def update_plot():
+    ax.clear()
+    ax.plot(data)
+    plt.axis('on')  # Turn off axis labels and ticks
+    plt.xlabel("Time")
+    plt.ylabel("Distance (mm)")
+    plt.tight_layout()  # Adjust the plot to remove any padding
+    plt.savefig('temp_plot.png')  # Save the plot as an image
 
-# Grab, process, and display video frames. Update plot line object(s).
+# Create windows for video stream and plot
+cv2.namedWindow('Video Stream')
+cv2.namedWindow('Data Analysis')
+
+# Main loop
 while True:
+    # Read video frame from webcam
     success, img = cap.read()
     imgMesh, faces = detector.findFaceMesh(img, draw=False)
     fps, imgCap = fpsReader.update(img, pos=(20, 20), color=(0, 255, 0), scale=2, thickness=2)
+
     if faces:
         # skeleton detection
         face = faces[0]
@@ -198,15 +195,32 @@ while True:
             # print("change value speed maximum: ", Vr)
             # t.sleep(0.5)
 
-    # Normalize histograms based on number of pixels per frame.
-    cv2.imshow('RGB', img)
-    lineR.set_ydata(d)
-    lineG.set_ydata(Vr)
+    # Simulate data generation (replace this with your own data source)
+    # Here, we generate random data and append it to the list
+    # Replace this with your actual variable that you want to plot
+    #import random
+    #new_data = random.randint(0, 100)
+    data.append(d)
 
-    fig.canvas.draw()
+    # Update the plot
+    update_plot()
 
+    # Load the saved plot image
+    plot_img = cv2.imread('temp_plot.png', cv2.IMREAD_UNCHANGED)
+
+    # Resize the plot image to match the video frame size
+    plot_img = cv2.resize(plot_img, (img.shape[1], img.shape[0]))
+
+    # Display the video frame in the 'Video Stream' window
+    cv2.imshow('Video Stream', img)
+
+    # Display the plot in the 'Live Plot' window
+    cv2.imshow('Live Plot', plot_img[:, :, :3])
+
+    # Check for 'q' key press to exit the loop
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+# Release the webcam and close all windows
 cap.release()
 cv2.destroyAllWindows()
