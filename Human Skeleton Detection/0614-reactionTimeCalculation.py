@@ -42,13 +42,14 @@ with open(write_file, "wt", encoding="utf-8") as output:
             #finding distance
             f = 714 #finding the average for focal length
             d = ((W*f) / w) * 10
+            offset = 500
             print(d)
-            d = round(d, 3)
+            d = round(d-offset, 3)
             cvzone.putTextRect(img, f'Depth: {d} mm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
             start_time = datetime.now()
             milliseconds = start_time.microsecond // 1000
 
-        #output.write(str(start_time.strftime("%H:%M:%S")) + ',' + str(milliseconds) + ',' + str(d) + '\n')
+        output.write(str(start_time.strftime("%H:%M:%S")) + ',' + str(milliseconds) + ',' + str(d) + '\n')
         cv2.imshow("Image", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
