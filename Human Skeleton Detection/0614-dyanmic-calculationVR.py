@@ -91,6 +91,8 @@ d = 0
 fpsReader = cvzone.FPS()
 cap = cv2.VideoCapture(0)
 detector = FaceMeshDetector(maxFaces=1)
+offset = 500
+robot = 550
 
 with open(write_file, "wt", encoding="utf-8") as output:
     #Record data csv opening
@@ -101,28 +103,38 @@ with open(write_file, "wt", encoding="utf-8") as output:
         fps, imgCap = fpsReader.update(img, pos=(20, 20), color=(0, 255, 0), scale=2, thickness=2)
 
         if faces:
+            data = []  # List to store the input data
+
+    # Collect 10 input values
+            while len(data) < 10:
         #skeleton detection
-            face = faces[0]
-            print(faces[0])
-            pointLeft = face[145]
-            pointRight = face[374]
-            cv2.line(imgMesh, pointLeft, pointRight, (0, 200, 0), 3)
-            cv2.circle(imgMesh, pointLeft, 5, (255, 0, 255), cv2.FILLED)
-            cv2.circle(imgMesh, pointRight, 5, (255, 0, 255), cv2.FILLED)
-            w, _ = detector.findDistance(pointLeft, pointRight)
-            W = 6.3  # default real width eyes distance
-            #Finding the focal length
+                face = faces[0]
+                #print(faces[0])
+                pointLeft = face[145]
+                pointRight = face[374]
+                cv2.line(imgMesh, pointLeft, pointRight, (0, 200, 0), 3)
+                cv2.circle(imgMesh, pointLeft, 5, (255, 0, 255), cv2.FILLED)
+                cv2.circle(imgMesh, pointRight, 5, (255, 0, 255), cv2.FILLED)
+                w, _ = detector.findDistance(pointLeft, pointRight)
+                W = 6.3  # default real width eyes distance
+                #Finding the focal length
 
-            #d = 60  #distance human and camera
-            #f = (w*d) / W
-            #print(f)
+                #d = 60  #distance human and camera
+                #f = (w*d) / W
+                #print(f)
 
-            #finding distance
-            f = 714 #finding the average for focal length
-            d = ((W*f) / w) * 10
-            offset = 500
-            print(d)
-            d = round(d-offset, 3)
+                #finding distance
+                f = 714 #finding the average for focal length
+                d = ((W*f) / w) * 10
+                value = d
+                data.append(value)
+
+                # Calculate the average
+            d = sum(data) / len(data)
+                #print(d)
+            d = round(d - offset - robot, 3)
+
+
             cvzone.putTextRect(img, f'Depth: {d} mm', (face[10][0] - 100, face[10][1] - 50), scale=1.5)
             if d < 0:
                 d = 0
