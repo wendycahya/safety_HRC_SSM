@@ -3,11 +3,10 @@ import math as mt
 import time as t
 
 #function program
-def SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr):
-    Tb = Vr / ac
-    Ss  = pow(Vr,2) / (2*ac)
+def SSM_calculation(Vr, Vh, Tr, Ts, ac, C, Zd, Zr):
     Ctot = C + Zd + Zr
-    Sp = Vh * ( Tr + Tb ) + (Vr * Tr) + Ss + Ctot
+    Ss   = Vr*Ts + ((ac*pow(Ts, 2))/2)
+    Sp   = Vh * (Tr + Ts) + (Vr * Tr) + Ss + Ctot
     return Sp
 
 def Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr):
@@ -18,16 +17,17 @@ def Vr_max(Sp, Vh, Vr, Tr, ac, C, Zd, Zr):
     return Vrmax
 
 #SSM variables
-Vr = 2000
+Vr = 750
 Vh = 1600
-Tr = 0.41
-ac = 2000
-C = 1200
-Zd = 90
-Zr = 25
+Tr = 0.1
+Ts = 0.08
+ac = 3000
+C_SSM = 200
+Zd = 106.7
+Zr = 1
 
-Sp = SSM_calculation(Vr, Vh, Tr, ac, C, Zd, Zr)
-print("Separation Minimum Distance Calculation: ", Sp)
+Sp = SSM_calculation(Vr, Vh, Tr, Ts, ac, C_SSM, Zd, Zr)
+print("Separation Minimum Distance Calculation: ", Sp+750)
 
 Scurrent = 6000
 
