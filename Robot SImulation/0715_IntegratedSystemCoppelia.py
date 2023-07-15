@@ -501,7 +501,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
         img = detectorPose.findPose(img)
         lmList, bboxInfo = detectorPose.findPosition(img, bboxWithHands=False)
 
-        cv2.rectangle(img, (0, 0), (width, 70), (10, 10, 10), -1)
+
         elapsed_time = round(t.time() - stopwatch_time, 3)
 
         # === Robot analysis Velocity ===
@@ -512,13 +512,13 @@ with open(write_file, "wt", encoding="utf-8") as output:
     # ===== Visualization information ======
 
         if faces:
-            if bboxInfo:
-                idrSh, xrSh, yrSh, zrSh = lmList[11]
-                idlSh, xlSh, ylSh, zlSh = lmList[12]
-                # print("===== asli =====")
-                # print("Id data ", idrSh, "right shoulder x=", xrSh, ", right shoulder y=", yrSh)
-                # print("Id data ", idlSh, "left shoulder x=", xrSh, ", left shoulder y=", yrSh)
-                chestDistance = round(mt.sqrt((xrSh - xlSh) ** 2 + (yrSh - ylSh) ** 2), 3)
+            # if bboxInfo:
+            #     idrSh, xrSh, yrSh, zrSh = lmList[11]
+            #     idlSh, xlSh, ylSh, zlSh = lmList[12]
+            #     # print("===== asli =====")
+            #     # print("Id data ", idrSh, "right shoulder x=", xrSh, ", right shoulder y=", yrSh)
+            #     # print("Id data ", idlSh, "left shoulder x=", xrSh, ", left shoulder y=", yrSh)
+            #     chestDistance = round(mt.sqrt((xrSh - xlSh) ** 2 + (yrSh - ylSh) ** 2), 3)
             #skeleton detection
             face = faces[0]
             #print(faces[0])
@@ -559,13 +559,13 @@ with open(write_file, "wt", encoding="utf-8") as output:
                     # print("===========================================")
 
                     eye_dist = round(eye_dist, 2)
-                    real_measurement = round((Achest * (chestDistance ** 2)) + (Bchest * chestDistance) + Cchest, 2)
-                    # print("==========")
-                    # print("lebar pixel ", chestDistance)
-                    print("Real Chest Distance", real_measurement)
+                    # real_measurement = round((Achest * (chestDistance ** 2)) + (Bchest * chestDistance) + Cchest, 2)
+                    # # print("==========")
+                    # # print("lebar pixel ", chestDistance)
+                    # print("Real Chest Distance", real_measurement)
 
-                    # D = min(eye_dist, disHR)
-                    D = min(eye_dist, real_measurement)
+                    D = eye_dist
+                    #D = min(eye_dist, real_measurement)
                     value = D
                     data.append(value)
 
@@ -667,7 +667,7 @@ with open(write_file, "wt", encoding="utf-8") as output:
         print("SUCCESS RECORD counter", counter, " !!!")
         # Load the saved plot image
         plot_img = cv2.imread('temp_plot.png', cv2.IMREAD_UNCHANGED)
-
+        cv2.rectangle(img, (0, 0), (width, 70), (10, 10, 10), -1)
         # Resize the plot image to match the video frame size
         plot_img = cv2.resize(plot_img, (img.shape[1], img.shape[0]))
         cv2.putText(img, "{} s".format(elapsed_time), (10, 30), cv2.FONT_HERSHEY_PLAIN,
